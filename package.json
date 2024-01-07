@@ -1,0 +1,11 @@
+{
+  "name": "ms-pagamento",
+  "version": "1.0.0",
+  "description": "Microserviço de Pagamento - PostTech FIAP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rafael Gonçalves <rafaelswitek@gmail.com>",
+  "license": "ISC"
+}
