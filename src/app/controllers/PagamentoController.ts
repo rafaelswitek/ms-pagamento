@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import PagamentoRepository from "../repositories/PagamentoRepository";
-import PagamentoEntity from "../entities/PagamentoEntity";
-import FormasPagamentoEnum from "../enums/FormasPagamentoEnum";
+import PagamentoRepository from "../../infra/repositories/PagamentoRepository";
+import FormasPagamentoEnum from "../../domain/enums/FormasPagamentoEnum";
+import PagamentoEntity from "../../domain/entities/PagamentoEntity";
 
 export default class PagamentoController {
     constructor(private repository: PagamentoRepository) {}

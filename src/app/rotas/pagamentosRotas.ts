@@ -1,7 +1,7 @@
 import express from "express";
+import PagamentoRepository from "../../infra/repositories/PagamentoRepository";
 import PagamentoController from "../controllers/PagamentoController";
-import PagamentoRepository from "../repositories/PagamentoRepository";
-import { AppDataSource } from "../config/dataSource";
+import { AppDataSource } from "../../infra/config/dataSource";
 const rotas = express.Router();
 const pagamentoRepository = new PagamentoRepository(
   AppDataSource.getRepository("PagamentoEntity"),
