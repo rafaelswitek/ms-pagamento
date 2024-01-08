@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
-import PagamentoEntity from "../entities/PagamentoEntity";
 import InterfacePagamentoRepository from "./interfaces/InterfacePagamentoRepository";
+import PagamentoEntity from "../../domain/entities/PagamentoEntity";
 
 export default class PagamentoRepository implements InterfacePagamentoRepository {
   private pagamentoRepository: Repository<PagamentoEntity>;

@@ -1,7 +1,7 @@
 import express from "express";
-import rotas from "./rotas";
 import "reflect-metadata";
-import { AppDataSource } from "./config/dataSource";
+import { AppDataSource } from "./infra/config/dataSource";
+import rotas from "./app/rotas";
 const app = express();
 app.use(express.json());
 rotas(app);

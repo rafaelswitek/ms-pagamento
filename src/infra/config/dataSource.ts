@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import path from "path";
 
-const entitiesPath = path.join(__dirname, "../entities");
+const entitiesPath = path.join(__dirname, '../../domain/entities');
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
