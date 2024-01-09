@@ -1,4 +1,4 @@
-import PagamentoEntity from "../../../domain/entities/PagamentoEntity";
+import PagamentoEntity from "./entities/PagamentoEntity";
 
 export default interface InterfacePagamentoRepository {
   criaPagamento(pagamento: PagamentoEntity): void | Promise<void>;
