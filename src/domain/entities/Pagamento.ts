@@ -3,7 +3,7 @@ import FormasPagamentoEnum from "../enums/FormasPagamentoEnum";
 import StatusEnum from "../enums/StatusEnum";
 
 @Entity()
-export default class PagamentoEntity {
+export default class Pagamento {
     @PrimaryGeneratedColumn()
     id!: number;
     @Column()
@@ -14,9 +14,9 @@ export default class PagamentoEntity {
     status: StatusEnum;
     @Column()
     formaPagamento: FormasPagamentoEnum;
-    @Column()
+    @Column({ nullable: true })
     valorPago?: number;
-    @Column()
+    @Column({ nullable: true })
     dataPagamento?: Date;
 
     constructor(
