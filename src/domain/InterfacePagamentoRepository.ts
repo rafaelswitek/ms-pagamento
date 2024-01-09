@@ -1,15 +1,15 @@
-import PagamentoEntity from "./entities/PagamentoEntity";
+import Pagamento from "./entities/Pagamento";
 
 export default interface InterfacePagamentoRepository {
-  criaPagamento(pagamento: PagamentoEntity): void | Promise<void>;
-  listaPagamento(): Array<PagamentoEntity> | Promise<PagamentoEntity[]>;
+  criaPagamento(pagamento: Pagamento): Promise<Pagamento>;
+  listaPagamento(): Array<Pagamento> | Promise<Pagamento[]>;
   atualizaPagamento(
     id: number,
-    pagamento: PagamentoEntity
-  ): Promise<{ success: boolean; message?: string }> | void;
-  deletaPagamento(id: number): Promise<{ success: boolean; message?: string }> | void;
-  buscaPagamentoPorCampoGenerico<Tipo extends keyof PagamentoEntity>(
+    pagamento: Pagamento
+  ): Promise<{ success: boolean; message?: string }>;
+  deletaPagamento(id: number): Promise<{ success: boolean; message?: string }>;
+  buscaPagamentoPorCampoGenerico<Tipo extends keyof Pagamento>(
     campo: Tipo,
-    valor: PagamentoEntity[Tipo]
-  ): Promise<PagamentoEntity[]> | PagamentoEntity[];
+    valor: Pagamento[Tipo]
+  ): Promise<Pagamento[]> | Pagamento[];
 }
