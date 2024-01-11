@@ -1,8 +1,8 @@
 enum FormasPagamentoEnum {
-    Dinheiro = "dinheiro",
-    Cartao = "cartao",
-    Pix = "pix",
-    MercadoPago = "mercadoPago",
+  Dinheiro = 'dinheiro',
+  Cartao = 'cartao',
+  Pix = 'pix',
+  MercadoPago = 'mercadoPago',
 }
 
-export default FormasPagamentoEnum;
+export default FormasPagamentoEnum
