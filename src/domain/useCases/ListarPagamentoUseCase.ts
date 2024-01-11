@@ -5,6 +5,10 @@ export default class ListarPagamentoUseCase {
     constructor(private repository: InterfacePagamentoRepository) {}
 
     async executa(): Promise<Pagamento[]> {
-        return this.repository.listaPagamento();
+        try {
+            return this.repository.listaPagamento();
+        } catch (error: any) {
+            throw new Error(`Erro ao listar pagamentos: ${error.message}`);
+        }
     }
 }

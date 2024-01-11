@@ -10,24 +10,28 @@ export default class AtualizarPagamentoUseCase {
         id: number,
         pagamentoDto: PagamentoDto
     ): Promise<{ success: boolean; message?: string }> {
-        this.validarCampos(pagamentoDto);
+        try {
+            this.validarCampos(pagamentoDto);
 
-        const novoPagamento = new Pagamento(
-            pagamentoDto.pedidoId,
-            parseFloat(pagamentoDto.valor),
-            StatusEnum[pagamentoDto.status as keyof typeof StatusEnum],
-            FormasPagamentoEnum[
-                pagamentoDto.formaPagamento as keyof typeof FormasPagamentoEnum
-            ],
-            pagamentoDto.valorPago
-                ? parseFloat(pagamentoDto.valorPago)
-                : undefined,
-            pagamentoDto.dataPagamento
-                ? new Date(pagamentoDto.dataPagamento)
-                : undefined
-        );
+            const novoPagamento = new Pagamento(
+                pagamentoDto.pedidoId,
+                parseFloat(pagamentoDto.valor),
+                StatusEnum[pagamentoDto.status as keyof typeof StatusEnum],
+                FormasPagamentoEnum[
+                    pagamentoDto.formaPagamento as keyof typeof FormasPagamentoEnum
+                ],
+                pagamentoDto.valorPago
+                    ? parseFloat(pagamentoDto.valorPago)
+                    : undefined,
+                pagamentoDto.dataPagamento
+                    ? new Date(pagamentoDto.dataPagamento)
+                    : undefined
+            );
 
-        return this.repository.atualizaPagamento(id, novoPagamento);
+            return this.repository.atualizaPagamento(id, novoPagamento);
+        } catch (error: any) {
+            throw new Error(`Erro ao atualizar pagamento: ${error.message}`);
+        }
     }
 
     private validarCampos(pagamentoDto: PagamentoDto): void {

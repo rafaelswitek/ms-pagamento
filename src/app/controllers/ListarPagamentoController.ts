@@ -9,8 +9,8 @@ export default class ListarPagamentoController {
             const pagamentos = await this.useCase.executa();
 
             return res.status(200).json(pagamentos);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao listar pagamento" });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
         }
     }
 }

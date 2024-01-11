@@ -25,8 +25,8 @@ export default class CriarPagamentoController {
             });
 
             return res.status(201).json(pagamento);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao criar pagamento" });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
         }
     }
 }
