@@ -9,6 +9,8 @@ import ListarPagamentoController from '../controllers/ListarPagamentoController'
 import ListarPagamentoUseCase from '../../domain/useCases/ListarPagamentoUseCase'
 import RemoverPagamentoUseCase from '../../domain/useCases/RemoverPagamentoUseCase'
 import RemoverPagamentoController from '../controllers/RemoverPagamentoController'
+import BuscarPagamentoUseCase from '../../domain/useCases/BuscarPagamentoUseCase'
+import BuscarPagamentoController from '../controllers/BuscarPagamentoController'
 const router = (app: express.Router) => {
   const pagamentoRepository = new PagamentoRepository(AppDataSource.getRepository('Pagamento'))
   const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository)
@@ -20,11 +22,15 @@ const router = (app: express.Router) => {
   const listarUseCase = new ListarPagamentoUseCase(pagamentoRepository)
   const listarPagamentoController = new ListarPagamentoController(listarUseCase)
 
+  const buscarUseCase = new BuscarPagamentoUseCase(pagamentoRepository)
+  const buscarPagamentoController = new BuscarPagamentoController(buscarUseCase)
+
   const removerUseCase = new RemoverPagamentoUseCase(pagamentoRepository)
   const removerPagamentoController = new RemoverPagamentoController(removerUseCase)
 
   app.post('/pagamento', (req, res) => criarPagamentoController.processar(req, res))
   app.get('/pagamento', (req, res) => listarPagamentoController.processar(req, res))
+  app.get('/pagamento/:id', (req, res) => buscarPagamentoController.processar(req, res))
   app.put('/pagamento/:id', (req, res) => atualizaPagamentoController.processar(req, res))
   app.delete('/pagamento/:id', (req, res) => removerPagamentoController.processar(req, res))
 }

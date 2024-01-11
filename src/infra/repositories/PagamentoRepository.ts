@@ -25,6 +25,22 @@ export default class PagamentoRepository implements InterfacePagamentoRepository
     }
   }
 
+  async buscaPorId(id: number): Promise<{ success: boolean; message?: string; pagamento?: Pagamento }> {
+    try {
+      const pagamento = await this.pagamentoRepository.findOne({
+        where: { id },
+      })
+
+      if (!pagamento) {
+        return { success: false, message: 'Pagamento não encontrado' }
+      }
+
+      return { success: true, pagamento }
+    } catch (error: any) {
+      throw new Error('Erro ao atualizar pagamento: ' + error.message)
+    }
+  }
+
   async atualizaPagamento(id: number, newData: Pagamento): Promise<{ success: boolean; message?: string }> {
     try {
       const pagamentoToUpdate = await this.pagamentoRepository.findOne({
