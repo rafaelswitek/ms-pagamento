@@ -12,12 +12,21 @@ export default class PagamentoRepository
     }
 
     async criaPagamento(pagamento: Pagamento): Promise<Pagamento> {
-        return await this.pagamentoRepository.save(pagamento);
+        try {
+            return await this.pagamentoRepository.save(pagamento);
+        } catch (error: any) {
+            throw new Error("Erro ao criar pagamento: " + error.message);
+        }
     }
 
     async listaPagamento(): Promise<Pagamento[]> {
-        return await this.pagamentoRepository.find();
+        try {
+            return await this.pagamentoRepository.find();
+        } catch (error: any) {
+            throw new Error("Erro ao listar pagamentos: " + error.message);
+        }
     }
+
     async atualizaPagamento(
         id: number,
         newData: Pagamento
@@ -32,15 +41,11 @@ export default class PagamentoRepository
             }
 
             Object.assign(pagamentoToUpdate, newData);
-
             await this.pagamentoRepository.save(pagamentoToUpdate);
 
             return { success: true };
-        } catch (error) {
-            return {
-                success: false,
-                message: "Ocorreu um erro ao tentar atualizar o pagamento.",
-            };
+        } catch (error: any) {
+            throw new Error("Erro ao atualizar pagamento: " + error.message);
         }
     }
 
@@ -57,13 +62,9 @@ export default class PagamentoRepository
             }
 
             await this.pagamentoRepository.remove(pagamentoToRemove);
-
             return { success: true };
-        } catch (error) {
-            return {
-                success: false,
-                message: "Ocorreu um erro ao tentar excluir o pagamento.",
-            };
+        } catch (error: any) {
+            throw new Error("Erro ao deletar pagamento: " + error.message);
         }
     }
 
@@ -71,9 +72,15 @@ export default class PagamentoRepository
         campo: Tipo,
         valor: Pagamento[Tipo]
     ): Promise<Pagamento[]> {
-        const pagamentos = await this.pagamentoRepository.find({
-            where: { [campo]: valor },
-        });
-        return pagamentos;
+        try {
+            const pagamentos = await this.pagamentoRepository.find({
+                where: { [campo]: valor },
+            });
+            return pagamentos;
+        } catch (error: any) {
+            throw new Error(
+                "Erro ao buscar pagamentos por campo genérico: " + error.message
+            );
+        }
     }
 }
