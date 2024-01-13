@@ -11,9 +11,10 @@ import RemoverPagamentoUseCase from '../../domain/useCases/RemoverPagamentoUseCa
 import RemoverPagamentoController from '../controllers/RemoverPagamentoController'
 import BuscarPagamentoUseCase from '../../domain/useCases/BuscarPagamentoUseCase'
 import BuscarPagamentoController from '../controllers/BuscarPagamentoController'
+import MercadoPagoService from '../../infra/services/MercadoPagoService'
 const router = (app: express.Router) => {
   const pagamentoRepository = new PagamentoRepository(AppDataSource.getRepository('Pagamento'))
-  const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository)
+  const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository, new MercadoPagoService())
   const criarPagamentoController = new CriarPagamentoController(criaUseCase)
 
   const atualizaUseCase = new AtualizarPagamentoUseCase(pagamentoRepository)
