@@ -1,71 +1,94 @@
-import { Repository } from "typeorm";
-import InterfacePagamentoRepository from "./interfaces/InterfacePagamentoRepository";
-import PagamentoEntity from "../../domain/entities/PagamentoEntity";
+import { Repository } from 'typeorm'
+import InterfacePagamentoRepository from '../../domain/interfaces/InterfacePagamentoRepository'
+import Pagamento from '../../domain/entities/Pagamento'
+import InterfacePagamentoResposta from '../../domain/interfaces/InterfacePagamentoResposta'
 
 export default class PagamentoRepository implements InterfacePagamentoRepository {
-  private pagamentoRepository: Repository<PagamentoEntity>;
+  private pagamentoRepository: Repository<Pagamento>
 
-  constructor(
-    pagamentoRepository: Repository<PagamentoEntity>,
-  ) {
-    this.pagamentoRepository = pagamentoRepository;
+  constructor(pagamentoRepository: Repository<Pagamento>) {
+    this.pagamentoRepository = pagamentoRepository
   }
 
-  async criaPagamento(pagamento: PagamentoEntity): Promise<void> {
-    await this.pagamentoRepository.save(pagamento);
-  }
-  async listaPagamento(): Promise<PagamentoEntity[]> {
-    return await this.pagamentoRepository.find();
-  }
-  async atualizaPagamento(
-    id: number,
-    newData: PagamentoEntity
-  ): Promise<{ success: boolean; message?: string }> {
+  async criaPagamento(pagamento: Pagamento): Promise<Pagamento> {
     try {
-      const pagamentoToUpdate = await this.pagamentoRepository.findOne({ where: { id } });
+      return await this.pagamentoRepository.save(pagamento)
+    } catch (error: any) {
+      throw new Error('Erro ao criar pagamento: ' + error.message)
+    }
+  }
+
+  async listaPagamento(): Promise<Pagamento[]> {
+    try {
+      return await this.pagamentoRepository.find()
+    } catch (error: any) {
+      throw new Error('Erro ao listar pagamentos: ' + error.message)
+    }
+  }
+
+  async buscaPorId(id: number): Promise<InterfacePagamentoResposta> {
+    try {
+      const pagamento = await this.pagamentoRepository.findOne({
+        where: { id },
+      })
+
+      if (!pagamento) {
+        return { success: false, message: 'Pagamento não encontrado' }
+      }
+
+      return { success: true, pagamento }
+    } catch (error: any) {
+      throw new Error('Erro ao atualizar pagamento: ' + error.message)
+    }
+  }
+
+  async atualizaPagamento(id: number, newData: Pagamento): Promise<InterfacePagamentoResposta> {
+    try {
+      const pagamentoToUpdate = await this.pagamentoRepository.findOne({
+        where: { id },
+      })
 
       if (!pagamentoToUpdate) {
-        return { success: false, message: "Pagamento não encontrado" };
+        return { success: false, message: 'Pagamento não encontrado' }
       }
 
-      Object.assign(pagamentoToUpdate, newData);
+      Object.assign(pagamentoToUpdate, newData)
+      const pagamento = await this.pagamentoRepository.save(pagamentoToUpdate)
 
-      await this.pagamentoRepository.save(pagamentoToUpdate);
-
-      return { success: true };
-    } catch (error) {
-      console.log(error);
-      return {
-        success: false,
-        message: "Ocorreu um erro ao tentar atualizar o pagamento.",
-      };
+      return { success: true, pagamento }
+    } catch (error: any) {
+      throw new Error('Erro ao atualizar pagamento: ' + error.message)
     }
   }
 
-  async deletaPagamento(id: number): Promise<{ success: boolean; message?: string }> {
+  async deletaPagamento(id: number): Promise<InterfacePagamentoResposta> {
     try {
-      const pagamentoToRemove = await this.pagamentoRepository.findOne({ where: { id } });
+      const pagamentoToRemove = await this.pagamentoRepository.findOne({
+        where: { id },
+      })
 
       if (!pagamentoToRemove) {
-        return { success: false, message: "Pagamento não encontrado" };
+        return { success: false, message: 'Pagamento não encontrado' }
       }
 
-      await this.pagamentoRepository.remove(pagamentoToRemove);
-
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        message: "Ocorreu um erro ao tentar excluir o pagamento.",
-      };
+      await this.pagamentoRepository.remove(pagamentoToRemove)
+      return { success: true }
+    } catch (error: any) {
+      throw new Error('Erro ao deletar pagamento: ' + error.message)
     }
   }
 
-  async buscaPagamentoPorCampoGenerico<Tipo extends keyof PagamentoEntity>(
+  async buscaPagamentoPorCampoGenerico<Tipo extends keyof Pagamento>(
     campo: Tipo,
-    valor: PagamentoEntity[Tipo]
-  ): Promise<PagamentoEntity[]> {
-    const pagamentos = await this.pagamentoRepository.find({ where: { [campo]: valor } });
-    return pagamentos;
+    valor: Pagamento[Tipo],
+  ): Promise<Pagamento[]> {
+    try {
+      const pagamentos = await this.pagamentoRepository.find({
+        where: { [campo]: valor },
+      })
+      return pagamentos
+    } catch (error: any) {
+      throw new Error('Erro ao buscar pagamentos por campo genérico: ' + error.message)
+    }
   }
 }

@@ -1,7 +1,7 @@
 enum StatusEnum {
-    Pendente = "pendente",
-    Pago = "pago",
-    Cancelado = "cancelado",
+  Pendente = 'pendente',
+  Pago = 'pago',
+  Cancelado = 'cancelado',
 }
 
-export default StatusEnum;
+export default StatusEnum
