@@ -1,5 +1,5 @@
 import Pagamento from '../entities/Pagamento'
-import InterfacePagamentoResposta from './InterfacePagamentoResposta';
+import InterfacePagamentoResposta from './InterfacePagamentoResposta'
 
 export default interface InterfacePagamentoRepository {
   criaPagamento(pagamento: Pagamento): Promise<Pagamento>

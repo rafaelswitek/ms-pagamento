@@ -1,4 +1,4 @@
-import Pagamento from "../entities/Pagamento"
+import Pagamento from '../entities/Pagamento'
 
 export default interface InterfacePagamentoResposta {
   success: boolean
