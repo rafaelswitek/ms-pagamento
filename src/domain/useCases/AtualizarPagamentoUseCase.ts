@@ -1,12 +1,13 @@
-import InterfacePagamentoRepository from '../InterfacePagamentoRepository'
+import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoRepository'
 import Pagamento from '../entities/Pagamento'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusEnum from '../enums/StatusEnum'
+import InterfacePagamentoResposta from '../interfaces/InterfacePagamentoResposta'
 
 export default class AtualizarPagamentoUseCase {
   constructor(private repository: InterfacePagamentoRepository) {}
 
-  async executa(id: number, pagamentoDto: PagamentoDto): Promise<{ success: boolean; message?: string }> {
+  async executa(id: number, pagamentoDto: PagamentoDto): Promise<InterfacePagamentoResposta> {
     try {
       this.validarCampos(pagamentoDto)
 
@@ -18,6 +19,9 @@ export default class AtualizarPagamentoUseCase {
         pagamentoDto.valorPago ? parseFloat(pagamentoDto.valorPago) : undefined,
         pagamentoDto.dataPagamento ? new Date(pagamentoDto.dataPagamento) : undefined,
       )
+
+      novoPagamento.setIntegrationId = pagamentoDto.integrationId!;
+      novoPagamento.setQrCode = pagamentoDto.qrCode!;
 
       return this.repository.atualizaPagamento(id, novoPagamento)
     } catch (error: any) {
