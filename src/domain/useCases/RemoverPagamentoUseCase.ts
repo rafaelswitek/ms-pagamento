@@ -1,4 +1,4 @@
-import InterfacePagamentoRepository from '../InterfacePagamentoRepository'
+import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoRepository'
 
 export default class RemoverPagamentoUseCase {
   constructor(private repository: InterfacePagamentoRepository) {}

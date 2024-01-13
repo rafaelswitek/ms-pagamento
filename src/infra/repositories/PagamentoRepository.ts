@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm'
-import InterfacePagamentoRepository from '../../domain/InterfacePagamentoRepository'
+import InterfacePagamentoRepository from '../../domain/interfaces/InterfacePagamentoRepository'
 import Pagamento from '../../domain/entities/Pagamento'
+import InterfacePagamentoResposta from '../../domain/interfaces/InterfacePagamentoResposta'
 
 export default class PagamentoRepository implements InterfacePagamentoRepository {
   private pagamentoRepository: Repository<Pagamento>
@@ -25,7 +26,7 @@ export default class PagamentoRepository implements InterfacePagamentoRepository
     }
   }
 
-  async buscaPorId(id: number): Promise<{ success: boolean; message?: string; pagamento?: Pagamento }> {
+  async buscaPorId(id: number): Promise<InterfacePagamentoResposta> {
     try {
       const pagamento = await this.pagamentoRepository.findOne({
         where: { id },
@@ -41,7 +42,7 @@ export default class PagamentoRepository implements InterfacePagamentoRepository
     }
   }
 
-  async atualizaPagamento(id: number, newData: Pagamento): Promise<{ success: boolean; message?: string }> {
+  async atualizaPagamento(id: number, newData: Pagamento): Promise<InterfacePagamentoResposta> {
     try {
       const pagamentoToUpdate = await this.pagamentoRepository.findOne({
         where: { id },
@@ -52,15 +53,15 @@ export default class PagamentoRepository implements InterfacePagamentoRepository
       }
 
       Object.assign(pagamentoToUpdate, newData)
-      await this.pagamentoRepository.save(pagamentoToUpdate)
+      const pagamento = await this.pagamentoRepository.save(pagamentoToUpdate)
 
-      return { success: true }
+      return { success: true, pagamento }
     } catch (error: any) {
       throw new Error('Erro ao atualizar pagamento: ' + error.message)
     }
   }
 
-  async deletaPagamento(id: number): Promise<{ success: boolean; message?: string }> {
+  async deletaPagamento(id: number): Promise<InterfacePagamentoResposta> {
     try {
       const pagamentoToRemove = await this.pagamentoRepository.findOne({
         where: { id },

@@ -1,4 +1,4 @@
-import InterfacePagamentoRepository from '../InterfacePagamentoRepository'
+import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoRepository'
 import Pagamento from '../entities/Pagamento'
 
 export default class ListarPagamentoUseCase {
