@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import AtualizarPagamentoUseCase from '../../domain/useCases/AtualizarPagamentoUseCase'
+import PagamentoDto from '../dtos/pagamento.dto'
 
 export default class AtualizarPagamentoController {
   constructor(private readonly useCase: AtualizarPagamentoUseCase) {}

@@ -4,6 +4,7 @@ import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoReposi
 import Pagamento from '../entities/Pagamento'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusEnum from '../enums/StatusEnum'
+import PagamentoDto from '../../app/dtos/pagamento.dto'
 
 interface QrCodeResposta {
   in_store_order_id: string
@@ -53,7 +54,7 @@ export default class CriarPagamentoUseCase {
       )
 
       const mercadoPagoResposta = await this.mercadoPagoService.gerarQrCodeDinamico(mercadoPagoDto)
-      if (mercadoPagoResposta.status !== 200) {
+      if (mercadoPagoResposta.status !== 201) {
         throw new Error(`Erro na solicitação: ${mercadoPagoResposta.statusText}`)
       }
       return mercadoPagoResposta.data as QrCodeResposta

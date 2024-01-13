@@ -3,6 +3,7 @@ import Pagamento from '../entities/Pagamento'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusEnum from '../enums/StatusEnum'
 import InterfacePagamentoResposta from '../interfaces/InterfacePagamentoResposta'
+import PagamentoDto from '../../app/dtos/pagamento.dto'
 
 export default class AtualizarPagamentoUseCase {
   constructor(private repository: InterfacePagamentoRepository) {}
@@ -11,7 +12,7 @@ export default class AtualizarPagamentoUseCase {
     try {
       this.validarCampos(pagamentoDto)
 
-      const novoPagamento = new Pagamento(
+      const pagamento = new Pagamento(
         pagamentoDto.pedidoId,
         parseFloat(pagamentoDto.valor),
         StatusEnum[pagamentoDto.status as keyof typeof StatusEnum],
@@ -20,10 +21,10 @@ export default class AtualizarPagamentoUseCase {
         pagamentoDto.dataPagamento ? new Date(pagamentoDto.dataPagamento) : undefined,
       )
 
-      novoPagamento.setIntegrationId = pagamentoDto.integrationId!;
-      novoPagamento.setQrCode = pagamentoDto.qrCode!;
+      pagamento.setIntegrationId = pagamentoDto.integrationId!;
+      pagamento.setQrCode = pagamentoDto.qrCode!;
 
-      return this.repository.atualizaPagamento(id, novoPagamento)
+      return this.repository.atualizaPagamento(id, pagamento)
     } catch (error: any) {
       throw new Error(`Erro ao atualizar pagamento: ${error.message}`)
     }

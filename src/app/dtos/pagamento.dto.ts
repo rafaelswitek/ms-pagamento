@@ -1,4 +1,4 @@
-class PagamentoDto {
+export default class PagamentoDto {
   constructor(
     public pedidoId: string,
     public valor: string,
