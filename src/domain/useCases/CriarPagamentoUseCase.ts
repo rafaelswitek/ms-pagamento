@@ -1,27 +1,64 @@
-import InterfacePagamentoRepository from '../InterfacePagamentoRepository'
+import { CashOutDto, ItemDto, PurchaseDto } from '../../app/dtos/mercadoPago.dto'
+import MercadoPagoService from '../../infra/services/MercadoPagoService'
+import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoRepository'
 import Pagamento from '../entities/Pagamento'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusEnum from '../enums/StatusEnum'
 
+interface QrCodeResposta {
+  in_store_order_id: string
+  qr_data: string
+}
+
 export default class CriarPagamentoUseCase {
-  constructor(private repository: InterfacePagamentoRepository) {}
+  constructor(
+    private repository: InterfacePagamentoRepository,
+    private mercadoPagoService: MercadoPagoService,
+  ) {}
 
   async executa(pagamentoDto: PagamentoDto): Promise<Pagamento> {
     try {
       this.validarCampos(pagamentoDto)
 
-      const novoPagamento = new Pagamento(
+      const dados = new Pagamento(
         pagamentoDto.pedidoId,
         parseFloat(pagamentoDto.valor),
         StatusEnum[pagamentoDto.status as keyof typeof StatusEnum],
         FormasPagamentoEnum[pagamentoDto.formaPagamento as keyof typeof FormasPagamentoEnum],
-        pagamentoDto.valorPago ? parseFloat(pagamentoDto.valorPago) : undefined,
-        pagamentoDto.dataPagamento ? new Date(pagamentoDto.dataPagamento) : undefined,
       )
 
-      return this.repository.criaPagamento(novoPagamento)
+      const novoPagamento = await this.repository.criaPagamento(dados)
+      const resposta = await this.gerarQrCode(novoPagamento)
+
+      novoPagamento.setIntegrationId = resposta.in_store_order_id
+      novoPagamento.setQrCode = resposta.qr_data
+
+      const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
+      return pagamentoAtualizado.pagamento!
     } catch (error: any) {
       throw new Error(`Erro ao criar pagamento: ${error.message}`)
+    }
+  }
+
+  private async gerarQrCode(pagamento: Pagamento) {
+    try {
+      const mercadoPagoDto = new PurchaseDto(
+        new CashOutDto(0),
+        `Pagamento ref. ao pedido:  ${pagamento.id}`,
+        pagamento.id.toString(),
+        [new ItemDto(pagamento.id.toString(), 'item', 'Produto', 'Item', pagamento.valor, 1, 'unit', pagamento.valor)],
+        'https://webhook.site/6dab636e-5b37-4de4-b2f1-2c5f2719b6f9',
+        'Product order',
+        pagamento.valor,
+      )
+
+      const mercadoPagoResposta = await this.mercadoPagoService.gerarQrCodeDinamico(mercadoPagoDto)
+      if (mercadoPagoResposta.status !== 200) {
+        throw new Error(`Erro na solicitação: ${mercadoPagoResposta.statusText}`)
+      }
+      return mercadoPagoResposta.data as QrCodeResposta
+    } catch (error: any) {
+      throw new Error(`Erro ao gerar QR Code: ${error.message}`)
     }
   }
 

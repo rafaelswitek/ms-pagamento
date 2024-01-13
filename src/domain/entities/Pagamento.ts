@@ -18,6 +18,10 @@ export default class Pagamento {
   valorPago?: number
   @Column({ nullable: true })
   dataPagamento?: Date
+  @Column({ nullable: true })
+  integrationId?: string
+  @Column({ nullable: true })
+  qrCode?: string
 
   constructor(
     pedidoId: string,
@@ -33,5 +37,13 @@ export default class Pagamento {
     this.formaPagamento = formaPagamento
     this.valorPago = valorPago
     this.dataPagamento = dataPagamento
+  }
+
+  set setIntegrationId(valor: string) {
+    this.integrationId = valor
+  }
+
+  set setQrCode(valor: string) {
+    this.qrCode = valor
   }
 }
