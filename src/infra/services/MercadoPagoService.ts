@@ -28,6 +28,19 @@ class MercadoPagoService {
 
     return axios.request(config)
   }
+
+  async consultarStatus(url: string): Promise<AxiosResponse> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.apiKey}`,
+      },
+    }
+
+    return axios.request(config)
+  }
 }
 
 export default MercadoPagoService

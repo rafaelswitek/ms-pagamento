@@ -12,9 +12,13 @@ import RemoverPagamentoController from '../controllers/RemoverPagamentoControlle
 import BuscarPagamentoUseCase from '../../domain/useCases/BuscarPagamentoUseCase'
 import BuscarPagamentoController from '../controllers/BuscarPagamentoController'
 import MercadoPagoService from '../../infra/services/MercadoPagoService'
+import WebhookController from '../controllers/WebhookController'
+import WebhookUseCase from '../../domain/useCases/WebhookUseCase'
 const router = (app: express.Router) => {
+  const mercadoPagoService = new MercadoPagoService()
+
   const pagamentoRepository = new PagamentoRepository(AppDataSource.getRepository('Pagamento'))
-  const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository, new MercadoPagoService())
+  const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
   const criarPagamentoController = new CriarPagamentoController(criaUseCase)
 
   const atualizaUseCase = new AtualizarPagamentoUseCase(pagamentoRepository)
@@ -29,8 +33,12 @@ const router = (app: express.Router) => {
   const removerUseCase = new RemoverPagamentoUseCase(pagamentoRepository)
   const removerPagamentoController = new RemoverPagamentoController(removerUseCase)
 
+  const webhookUseCase = new WebhookUseCase(buscarUseCase, mercadoPagoService, atualizaUseCase)
+  const webhookController = new WebhookController(webhookUseCase)
+
   app.post('/pagamento', (req, res) => criarPagamentoController.processar(req, res))
   app.get('/pagamento', (req, res) => listarPagamentoController.processar(req, res))
+  app.post('/pagamento/webhook', (req, res) => webhookController.processar(req, res))
   app.get('/pagamento/:id', (req, res) => buscarPagamentoController.processar(req, res))
   app.put('/pagamento/:id', (req, res) => atualizaPagamentoController.processar(req, res))
   app.delete('/pagamento/:id', (req, res) => removerPagamentoController.processar(req, res))
