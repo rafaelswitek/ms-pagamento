@@ -1,7 +1,6 @@
 import MercadoPagoService from '../../../src/infra/services/MercadoPagoService'
 import { CashOutDto, ItemDto, PurchaseDto } from '../../../src/app/dtos/mercadoPago.dto'
 
-// Mock para o HttpClient
 class MockHttpClient {
   async post(url: string, data: string, config: any): Promise<any> {
     return {

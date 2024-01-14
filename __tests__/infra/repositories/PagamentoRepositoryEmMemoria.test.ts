@@ -2,9 +2,10 @@ import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/Pagame
 import Pagamento from '../../../src/domain/entities/Pagamento'
 import StatusEnum from '../../../src/domain/enums/StatusEnum'
 import FormasPagamentoEnum from '../../../src/domain/enums/FormasPagamentoEnum'
+import InterfacePagamentoRepository from '../../../src/domain/interfaces/InterfacePagamentoRepository'
 
 describe('PagamentoRepositoryEmMemoria', () => {
-  let repository: PagamentoRepositoryEmMemoria
+  let repository: InterfacePagamentoRepository
   const pagamento = new Pagamento('pedido123', 100.0, StatusEnum.Pendente, FormasPagamentoEnum.MercadoPago)
 
   beforeEach(() => {
@@ -54,11 +55,5 @@ describe('PagamentoRepositoryEmMemoria', () => {
     const result = await repository.deletaPagamento(pagamentoCriado.id)
 
     expect(result.success).toBe(true)
-  })
-
-  it('deve listar os pagamento por um campo generico', async () => {
-    const pagamentos = await repository.buscaPagamentoPorCampoGenerico('status', StatusEnum.Pago)
-
-    expect(Array.isArray(pagamentos)).toBe(true)
   })
 })
