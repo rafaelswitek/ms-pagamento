@@ -48,7 +48,7 @@ export default class CriarPagamentoUseCase {
         `Pagamento ref. ao pedido:  ${pagamento.id}`,
         pagamento.id.toString(),
         [new ItemDto(pagamento.id.toString(), 'item', 'Produto', 'Item', pagamento.valor, 1, 'unit', pagamento.valor)],
-        'https://webhook.site/6dab636e-5b37-4de4-b2f1-2c5f2719b6f9',
+        process.env.URL_BASE + '/pagamento/webhook',
         'Product order',
         pagamento.valor,
       )
