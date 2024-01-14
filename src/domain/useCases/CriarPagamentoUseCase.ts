@@ -54,10 +54,7 @@ export default class CriarPagamentoUseCase {
       )
 
       const mercadoPagoResposta = await this.mercadoPagoService.gerarQrCodeDinamico(mercadoPagoDto)
-      if (mercadoPagoResposta.status !== 201) {
-        throw new Error(`Erro na solicitação: ${mercadoPagoResposta.statusText}`)
-      }
-      return mercadoPagoResposta.data as QrCodeResposta
+      return mercadoPagoResposta as QrCodeResposta
     } catch (error: any) {
       throw new Error(`Erro ao gerar QR Code: ${error.message}`)
     }
