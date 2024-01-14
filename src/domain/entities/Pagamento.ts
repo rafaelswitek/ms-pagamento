@@ -39,11 +39,11 @@ export default class Pagamento {
     this.dataPagamento = dataPagamento
   }
 
-  set setIntegrationId(valor: string) {
+  setIntegrationId(valor: string): void {
     this.integrationId = valor
   }
 
-  set setQrCode(valor: string) {
+  setQrCode(valor: string): void {
     this.qrCode = valor
   }
 }

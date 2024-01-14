@@ -31,8 +31,8 @@ export default class CriarPagamentoUseCase {
       const novoPagamento = await this.repository.criaPagamento(dados)
       const resposta = await this.gerarQrCode(novoPagamento)
 
-      novoPagamento.setIntegrationId = resposta.in_store_order_id
-      novoPagamento.setQrCode = resposta.qr_data
+      novoPagamento.setIntegrationId(resposta.in_store_order_id)
+      novoPagamento.setQrCode(resposta.qr_data)
 
       const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
       return pagamentoAtualizado.pagamento!
