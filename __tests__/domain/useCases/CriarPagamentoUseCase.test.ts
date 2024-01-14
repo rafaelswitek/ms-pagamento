@@ -41,4 +41,44 @@ describe('CriarPagamentoUseCase', () => {
 
     expect(novoPagamento).toBeDefined()
   })
+
+  it('deve lançar uma exception de Status inválido', async () => {
+    const pagamentoRepositoryMock = new PagamentoRepositoryEmMemoria()
+    const mercadoPagoServiceMock = new MercadoPagoService() as jest.Mocked<MercadoPagoService>
+    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepositoryMock, mercadoPagoServiceMock)
+
+    const mockPagamentoDto: PagamentoDto = {
+      valor: '12',
+      status: 'pendente',
+      formaPagamento: 'Pix',
+      pedidoId: '1234',
+    }
+
+    try {
+      await criarPagamentoUseCase.executa(mockPagamentoDto)
+      fail('Deveria ter lançado uma exceção')
+    } catch (error: any) {
+      expect(error.message).toBe('Erro ao criar pagamento: Status inválido')
+    }
+  })
+
+  it('deve lançar uma exception de Forma de pagamento inválida', async () => {
+    const pagamentoRepositoryMock = new PagamentoRepositoryEmMemoria()
+    const mercadoPagoServiceMock = new MercadoPagoService() as jest.Mocked<MercadoPagoService>
+    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepositoryMock, mercadoPagoServiceMock)
+
+    const mockPagamentoDto: PagamentoDto = {
+      valor: '12',
+      status: 'Pendente',
+      formaPagamento: 'pix',
+      pedidoId: '1234',
+    }
+
+    try {
+      await criarPagamentoUseCase.executa(mockPagamentoDto)
+      fail('Deveria ter lançado uma exceção')
+    } catch (error: any) {
+      expect(error.message).toBe('Erro ao criar pagamento: Forma de pagamento inválida')
+    }
+  })
 })
