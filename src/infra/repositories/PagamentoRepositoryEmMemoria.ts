@@ -33,11 +33,11 @@ export default class PagamentoRepositoryEmMemoria implements InterfacePagamentoR
       return { success: false, message: 'Pagamento não encontrado' }
     }
 
-    const pagamento = this.pagamentos[index]
-    pagamento.setIntegrationId(newData.integrationId || '')
-    pagamento.setQrCode(newData.qrCode || '')
+    newData.id = this.pagamentos[index].id
 
-    return { success: true, pagamento }
+    this.pagamentos[index] = newData
+
+    return { success: true, pagamento: newData }
   }
 
   async deletaPagamento(id: number): Promise<InterfacePagamentoResposta> {
@@ -50,13 +50,5 @@ export default class PagamentoRepositoryEmMemoria implements InterfacePagamentoR
     this.pagamentos.splice(index, 1)
 
     return { success: true }
-  }
-
-  async buscaPagamentoPorCampoGenerico<Tipo extends keyof Pagamento>(
-    campo: Tipo,
-    valor: Pagamento[Tipo],
-  ): Promise<Pagamento[]> {
-    const pagamentos = this.pagamentos.filter((p) => p[campo] === valor)
-    return pagamentos
   }
 }

@@ -7,8 +7,4 @@ export default interface InterfacePagamentoRepository {
   buscaPorId(id: number): Promise<InterfacePagamentoResposta>
   atualizaPagamento(id: number, pagamento: Pagamento): Promise<InterfacePagamentoResposta>
   deletaPagamento(id: number): Promise<InterfacePagamentoResposta>
-  buscaPagamentoPorCampoGenerico<Tipo extends keyof Pagamento>(
-    campo: Tipo,
-    valor: Pagamento[Tipo],
-  ): Promise<Pagamento[]> | Pagamento[]
 }

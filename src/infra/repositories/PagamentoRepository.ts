@@ -77,18 +77,4 @@ export default class PagamentoRepository implements InterfacePagamentoRepository
       throw new Error('Erro ao deletar pagamento: ' + error.message)
     }
   }
-
-  async buscaPagamentoPorCampoGenerico<Tipo extends keyof Pagamento>(
-    campo: Tipo,
-    valor: Pagamento[Tipo],
-  ): Promise<Pagamento[]> {
-    try {
-      const pagamentos = await this.pagamentoRepository.find({
-        where: { [campo]: valor },
-      })
-      return pagamentos
-    } catch (error: any) {
-      throw new Error('Erro ao buscar pagamentos por campo genérico: ' + error.message)
-    }
-  }
 }

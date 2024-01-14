@@ -1,5 +1,4 @@
 import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoRepository'
-import Pagamento from '../entities/Pagamento'
 import InterfacePagamentoResposta from '../interfaces/InterfacePagamentoResposta'
 
 export default class BuscarPagamentoUseCase {
