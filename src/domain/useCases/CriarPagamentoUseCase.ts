@@ -31,8 +31,8 @@ export default class CriarPagamentoUseCase {
       const novoPagamento = await this.repository.criaPagamento(dados)
       const resposta = await this.gerarQrCode(novoPagamento)
 
-      novoPagamento.setIntegrationId = resposta.in_store_order_id
-      novoPagamento.setQrCode = resposta.qr_data
+      novoPagamento.setIntegrationId(resposta.in_store_order_id)
+      novoPagamento.setQrCode(resposta.qr_data)
 
       const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
       return pagamentoAtualizado.pagamento!
@@ -48,16 +48,13 @@ export default class CriarPagamentoUseCase {
         `Pagamento ref. ao pedido:  ${pagamento.id}`,
         pagamento.id.toString(),
         [new ItemDto(pagamento.id.toString(), 'item', 'Produto', 'Item', pagamento.valor, 1, 'unit', pagamento.valor)],
-        'https://webhook.site/6dab636e-5b37-4de4-b2f1-2c5f2719b6f9',
+        process.env.URL_BASE + '/pagamento/webhook',
         'Product order',
         pagamento.valor,
       )
 
       const mercadoPagoResposta = await this.mercadoPagoService.gerarQrCodeDinamico(mercadoPagoDto)
-      if (mercadoPagoResposta.status !== 201) {
-        throw new Error(`Erro na solicitação: ${mercadoPagoResposta.statusText}`)
-      }
-      return mercadoPagoResposta.data as QrCodeResposta
+      return mercadoPagoResposta as QrCodeResposta
     } catch (error: any) {
       throw new Error(`Erro ao gerar QR Code: ${error.message}`)
     }

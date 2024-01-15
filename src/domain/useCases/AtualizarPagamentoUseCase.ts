@@ -21,8 +21,8 @@ export default class AtualizarPagamentoUseCase {
         pagamentoDto.dataPagamento ? new Date(pagamentoDto.dataPagamento) : undefined,
       )
 
-      pagamento.setIntegrationId = pagamentoDto.integrationId!;
-      pagamento.setQrCode = pagamentoDto.qrCode!;
+      pagamento.setIntegrationId(pagamentoDto.integrationId!)
+      pagamento.setQrCode(pagamentoDto.qrCode!)
 
       return this.repository.atualizaPagamento(id, pagamento)
     } catch (error: any) {
