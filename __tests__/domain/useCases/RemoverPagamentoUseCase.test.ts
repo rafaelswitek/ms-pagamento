@@ -59,11 +59,13 @@ describe('RemoverPagamentoUseCase', () => {
     expect(retorno.success).toBe(false)
     expect(retorno.message).toBe('Pagamento não encontrado')
   })
-  
+
   it('deve lançar um erro ao tentar remover um pagamento', async () => {
     const pagamentoRepository = {} as any
-    const removerPagamentoUseCase = new RemoverPagamentoUseCase(pagamentoRepository);
+    const removerPagamentoUseCase = new RemoverPagamentoUseCase(pagamentoRepository)
 
-    await expect(removerPagamentoUseCase.executa(1)).rejects.toThrow('Erro ao remover pagamento: this.repository.deletaPagamento is not a function');
-  });
+    await expect(removerPagamentoUseCase.executa(1)).rejects.toThrow(
+      'Erro ao remover pagamento: this.repository.deletaPagamento is not a function',
+    )
+  })
 })

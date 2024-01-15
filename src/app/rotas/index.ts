@@ -16,7 +16,7 @@ import WebhookController from '../controllers/WebhookController'
 import WebhookUseCase from '../../domain/useCases/WebhookUseCase'
 import AxiosAdapter from '../../infra/adapters/AxiosAdapter'
 const router = (app: express.Router) => {
-  const httpClient = new AxiosAdapter();
+  const httpClient = new AxiosAdapter()
   const mercadoPagoService = new MercadoPagoService(httpClient)
 
   const pagamentoRepository = new PagamentoRepository(AppDataSource.getRepository('Pagamento'))
