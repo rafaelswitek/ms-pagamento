@@ -1,0 +1,186 @@
+openapi: 3.0.0
+info:
+  title: PosTech
+  description: Rotas para a Microserviço de Pagamento da PosTech
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Sandbox
+paths:
+  /pagamento:
+    get:
+      summary: Listar todos os pagamentos
+      tags:
+        - Pagamento
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Pagamento" }
+    post:
+      summary: Criar um novo pagamento
+      tags:
+        - Pagamento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                valor:
+                  type: string
+                status:
+                  type: string
+                formaPagamento:
+                  type: string
+                pedidoId:
+                  type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pagamento"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pagamento/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: ID
+    get:
+      summary: Buscar um pagamento pelo ID
+      tags:
+        - Pagamento
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pagamento"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Atualizar um pagamento
+      tags:
+        - Pagamento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                valor:
+                  type: string
+                status:
+                  type: string
+                formaPagamento:
+                  type: string
+                pedidoId:
+                  type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pagamento"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Deletar um pagamento
+      tags:
+        - Pagamento
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pagamento"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pagamento/webhook:
+    post:
+      summary: Receber um webhook do Mercado Pago
+      tags:
+        - Webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resource:
+                  type: string
+                topic:
+                  type: string
+      responses:
+        200:
+          description: Success
+    
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Mensagem de erro
+    Pagamento:
+      type: object
+      properties:
+        pedidoId:
+          type: string
+          description: ID do Pedido
+        valor:
+          type: string
+          description: Valor do pagamento
+        status:
+          type: string
+          description: Status do pagamento
+        formaPagamento:
+          type: string
+          description: Forma de pagamento
+        valorPago:
+          type: string
+          description: Valor pago
+        dataPagamento:
+          type: string
+          description: Data do pagamento
+        id:
+          type: string
+          description: ID do pagamento
+        integrationId:
+          type: string
+          description: ID da integração com o Mercado Pago
+        qrCode:
+          type: string
+          description: QR Code gerado no mercado Pago
