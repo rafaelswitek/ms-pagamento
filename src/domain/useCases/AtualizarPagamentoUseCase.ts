@@ -1,9 +1,10 @@
 import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoRepository'
 import Pagamento from '../entities/Pagamento'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
-import StatusEnum from '../enums/StatusEnum'
+import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import InterfacePagamentoResposta from '../interfaces/InterfacePagamentoResposta'
 import PagamentoDto from '../../app/dtos/pagamento.dto'
+import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
 
 export default class AtualizarPagamentoUseCase {
   constructor(private repository: InterfacePagamentoRepository) {}
@@ -15,7 +16,8 @@ export default class AtualizarPagamentoUseCase {
       const pagamento = new Pagamento(
         pagamentoDto.pedidoId,
         parseFloat(pagamentoDto.valor),
-        StatusEnum[pagamentoDto.status as keyof typeof StatusEnum],
+        StatusPedidoEnum[pagamentoDto.statusPedido as keyof typeof StatusPedidoEnum],
+        StatusPagamentoEnum[pagamentoDto.statusPagamento as keyof typeof StatusPagamentoEnum],
         FormasPagamentoEnum[pagamentoDto.formaPagamento as keyof typeof FormasPagamentoEnum],
         pagamentoDto.valorPago ? parseFloat(pagamentoDto.valorPago) : undefined,
         pagamentoDto.dataPagamento ? new Date(pagamentoDto.dataPagamento) : undefined,
@@ -31,7 +33,7 @@ export default class AtualizarPagamentoUseCase {
   }
 
   private validarCampos(pagamentoDto: PagamentoDto): void {
-    if (!this.isStatusValid(pagamentoDto.status)) {
+    if (!this.isStatusValid(pagamentoDto.statusPagamento)) {
       throw new Error('Status inválido')
     }
 
@@ -41,7 +43,7 @@ export default class AtualizarPagamentoUseCase {
   }
 
   private isStatusValid(status: string): boolean {
-    return Object.keys(StatusEnum).includes(status)
+    return Object.keys(StatusPedidoEnum).includes(status)
   }
 
   private isFormaPagamentoValid(formaPagamento: string): boolean {

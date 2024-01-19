@@ -1,5 +1,5 @@
 import PagamentoDto from '../../../src/app/dtos/pagamento.dto'
-import StatusEnum from '../../../src/domain/enums/StatusEnum'
+import StatusPedidoEnum from '../../../src/domain/enums/StatusPedidoEnum'
 import CriarPagamentoUseCase from '../../../src/domain/useCases/CriarPagamentoUseCase'
 import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/PagamentoRepositoryEmMemoria'
 import MercadoPagoService from '../../../src/infra/services/MercadoPagoService'
@@ -37,7 +37,8 @@ describe('CriarPagamentoUseCase', () => {
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      status: 'Pendente',
+      statusPedido: 'Pendente',
+      statusPagamento: 'Pendente',
       formaPagamento: 'Pix',
       pedidoId: '1234',
     }
@@ -45,7 +46,7 @@ describe('CriarPagamentoUseCase', () => {
     const novoPagamento = await criarPagamentoUseCase.executa(mockPagamentoDto)
 
     expect(novoPagamento.id).toBe(1)
-    expect(novoPagamento.status).toBe(StatusEnum.Pendente)
+    expect(novoPagamento.statusPedido).toBe(StatusPedidoEnum.RECEBIDO)
     expect(novoPagamento.qrCode).toBe(
       '00020101021243650016COM.MERCADOLIBRE0201306367a6a4328-a414-472c-978e-fd2c381e07035204000053039865802BR5909Test Test6009SAO PAULO62070503***63041CD7',
     )
@@ -57,7 +58,8 @@ describe('CriarPagamentoUseCase', () => {
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      status: 'pendente',
+      statusPedido: 'pendente',
+      statusPagamento: 'pendente',
       formaPagamento: 'Pix',
       pedidoId: '1234',
     }
@@ -76,7 +78,8 @@ describe('CriarPagamentoUseCase', () => {
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      status: 'Pendente',
+      statusPedido: 'Pendente',
+      statusPagamento: 'Pendente',
       formaPagamento: 'pix',
       pedidoId: '1234',
     }

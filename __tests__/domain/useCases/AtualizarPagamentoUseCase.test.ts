@@ -1,5 +1,5 @@
 import PagamentoDto from '../../../src/app/dtos/pagamento.dto'
-import StatusEnum from '../../../src/domain/enums/StatusEnum'
+import StatusPedidoEnum from '../../../src/domain/enums/StatusPedidoEnum'
 import AtualizarPagamentoUseCase from '../../../src/domain/useCases/AtualizarPagamentoUseCase'
 import CriarPagamentoUseCase from '../../../src/domain/useCases/CriarPagamentoUseCase'
 import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/PagamentoRepositoryEmMemoria'
@@ -24,7 +24,8 @@ class MockHttpClient {
 
 const mockPagamentoDto: PagamentoDto = {
   valor: '12',
-  status: 'Pendente',
+  statusPedido: 'Pendente',
+  statusPagamento: 'Pendente',
   formaPagamento: 'Pix',
   pedidoId: '1234',
 }
@@ -55,7 +56,7 @@ describe('AtualizarPagamentoUseCase', () => {
 
     const retorno = await atualizarPagamentoUseCase.executa(novoPagamento.id, novo)
 
-    expect(retorno.pagamento!.status).toBe(StatusEnum.Pago)
+    expect(retorno.pagamento!.statusPedido).toBe(StatusPedidoEnum.RECEBIDO)
   })
 
   it('deve dar erro ao atualizar pagamento inexistente', async () => {
@@ -83,7 +84,8 @@ describe('AtualizarPagamentoUseCase', () => {
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      status: 'pendente',
+      statusPedido: 'pendente',
+      statusPagamento: 'pendente',
       formaPagamento: 'Pix',
       pedidoId: '1234',
     }
@@ -102,7 +104,8 @@ describe('AtualizarPagamentoUseCase', () => {
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      status: 'Pendente',
+      statusPedido: 'Pendente',
+      statusPagamento: 'Pendente',
       formaPagamento: 'pix',
       pedidoId: '1234',
     }

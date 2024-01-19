@@ -1,7 +1,7 @@
 import PagamentoDto from '../../app/dtos/pagamento.dto'
 import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
-import StatusEnum from '../enums/StatusEnum'
+import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import InterfaceWebhook from '../interfaces/InterfaceWebhook'
 import AtualizarPagamentoUseCase from './AtualizarPagamentoUseCase'
 import BuscarPagamentoUseCase from './BuscarPagamentoUseCase'
@@ -28,7 +28,7 @@ export default class WebhookUseCase {
         const pagamentoDto = new PagamentoDto(
           pagamento!.pedidoId,
           pagamento!.valor.toString(),
-          'Pago' as keyof typeof StatusEnum,
+          'Pago' as keyof typeof StatusPedidoEnum,
           'MercadoPago' as keyof typeof FormasPagamentoEnum,
           pagamento!.valor?.toString(),
           new Date().toString(),
