@@ -1,13 +1,12 @@
 version: '3'
 
-networks:
-  postech_net:
-    driver: bridge
-
 services:
-  
   db:
-    image: mysql:latest
+    image: mariadb:10.9-jammy
+    restart: always
+    env_file:
+      - .env
+    tty: true
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-root}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-ms_pagamento}
@@ -16,9 +15,10 @@ services:
       MYSQL_HOST: ${MYSQL_HOST:-localhost}
     ports:
       - '3307:3306'
+    volumes:
+      - volume_db:/var/lib/mysql
     networks:
       - postech_net
-    restart: always
 
   app:
     build:
@@ -30,16 +30,24 @@ services:
       - db
     networks:
       - postech_net
-  
-  swagger-ui:
-    depends_on:
-      - app
-    image: swaggerapi/swagger-ui
-    container_name: swagger_ui_container
-    ports:
-      - "80:8080"
-    volumes:
-      - ./swagger:/usr/share/nginx/html/swagger
-    environment:
-      API_URL: /swagger/openapi.yaml
 
+  # swagger-ui:
+  #   depends_on:
+  #     - app
+  #   image: swaggerapi/swagger-ui
+  #   container_name: swagger_ui_container
+  #   ports:
+  #     - "80:8080"
+  #   volumes:
+  #     - ./swagger:/usr/share/nginx/html/swagger
+  #   environment:
+  #     API_URL: /swagger/openapi.yaml
+
+networks:
+  postech_net:
+    driver: bridge
+
+volumes:
+  cache:
+    driver: local
+  volume_db:
