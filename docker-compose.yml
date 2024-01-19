@@ -5,6 +5,21 @@ networks:
     driver: bridge
 
 services:
+  
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-ms_pagamento}
+      MYSQL_USER: ${MYSQL_USER:-postech}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-postech}
+      MYSQL_HOST: ${MYSQL_HOST:-localhost}
+    ports:
+      - '3307:3306'
+    networks:
+      - postech_net
+    restart: always
+
   app:
     build:
       context: .
@@ -13,18 +28,6 @@ services:
       - '3000:3000'
     depends_on:
       - db
-    networks:
-      - postech_net
-
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-root}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-ms_pagamento}
-      MYSQL_USER: ${MYSQL_USER:-postech}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-postech}
-    ports:
-      - '3307:3306'
     networks:
       - postech_net
   
