@@ -61,12 +61,12 @@ describe('ListarPagamentoUseCase', () => {
     expect(retorno.length).toBe(0)
   })
 
-  it('deve lançar um erro ao tentar atualizar um pagamento', async () => {
+  it('deve lançar um erro ao tentar listar os pagamentos', async () => {
     const pagamentoRepository = {} as any
     const listarPagamentoUseCase = new ListarPagamentoUseCase(pagamentoRepository)
 
     await expect(listarPagamentoUseCase.executa()).rejects.toThrow(
-      'Erro ao atualizar pagamento: this.repository.atualizaPagamento is not a function',
+      'Erro ao listar pagamentos: this.repository.listaPagamento is not a function',
     )
   })
 })

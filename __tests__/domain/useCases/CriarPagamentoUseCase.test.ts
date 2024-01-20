@@ -37,8 +37,8 @@ describe('CriarPagamentoUseCase', () => {
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      statusPedido: 'Pendente',
-      statusPagamento: 'Pendente',
+      statusPedido: 'Recebido',
+      statusPagamento: 'Aguardando pagamento',
       formaPagamento: 'Pix',
       pedidoId: '1234',
     }
@@ -52,34 +52,14 @@ describe('CriarPagamentoUseCase', () => {
     )
   })
 
-  it('deve lançar uma exception de Status inválido', async () => {
-    const pagamentoRepository = new PagamentoRepositoryEmMemoria()
-    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
-
-    const mockPagamentoDto: PagamentoDto = {
-      valor: '12',
-      statusPedido: 'pendente',
-      statusPagamento: 'pendente',
-      formaPagamento: 'Pix',
-      pedidoId: '1234',
-    }
-
-    try {
-      await criarPagamentoUseCase.executa(mockPagamentoDto)
-      fail('Deveria ter lançado uma exceção')
-    } catch (error: any) {
-      expect(error.message).toBe('Erro ao criar pagamento: Status inválido')
-    }
-  })
-
   it('deve lançar uma exception de Forma de pagamento inválida', async () => {
     const pagamentoRepository = new PagamentoRepositoryEmMemoria()
     const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      statusPedido: 'Pendente',
-      statusPagamento: 'Pendente',
+      statusPedido: 'Recebido',
+      statusPagamento: 'Aguardando pagamento',
       formaPagamento: 'pix',
       pedidoId: '1234',
     }

@@ -16,9 +16,9 @@ export default class AtualizarPagamentoUseCase {
       const pagamento = new Pagamento(
         pagamentoDto.pedidoId,
         parseFloat(pagamentoDto.valor),
-        StatusPedidoEnum[pagamentoDto.statusPedido as keyof typeof StatusPedidoEnum],
-        StatusPagamentoEnum[pagamentoDto.statusPagamento as keyof typeof StatusPagamentoEnum],
-        FormasPagamentoEnum[pagamentoDto.formaPagamento as keyof typeof FormasPagamentoEnum],
+        pagamentoDto.statusPedido as StatusPedidoEnum,
+        pagamentoDto.statusPagamento as StatusPagamentoEnum,
+        pagamentoDto.formaPagamento as FormasPagamentoEnum,
         pagamentoDto.valorPago ? parseFloat(pagamentoDto.valorPago) : undefined,
         pagamentoDto.dataPagamento ? new Date(pagamentoDto.dataPagamento) : undefined,
       )
@@ -33,8 +33,12 @@ export default class AtualizarPagamentoUseCase {
   }
 
   private validarCampos(pagamentoDto: PagamentoDto): void {
-    if (!this.isStatusValid(pagamentoDto.statusPagamento)) {
-      throw new Error('Status inválido')
+    if (!this.isStatusPedidoValid(pagamentoDto.statusPedido)) {
+      throw new Error('Status de pedido inválido')
+    }
+
+    if (!this.isStatusPagamentoValid(pagamentoDto.statusPagamento)) {
+      throw new Error('Status de pagamento inválido')
     }
 
     if (!this.isFormaPagamentoValid(pagamentoDto.formaPagamento)) {
@@ -42,11 +46,15 @@ export default class AtualizarPagamentoUseCase {
     }
   }
 
-  private isStatusValid(status: string): boolean {
-    return Object.keys(StatusPedidoEnum).includes(status)
+  private isStatusPedidoValid(status: string): boolean {
+    return Object.values(StatusPedidoEnum).includes(status as StatusPedidoEnum)
+  }
+
+  private isStatusPagamentoValid(status: string): boolean {
+    return Object.values(StatusPagamentoEnum).includes(status as StatusPagamentoEnum)
   }
 
   private isFormaPagamentoValid(formaPagamento: string): boolean {
-    return Object.keys(FormasPagamentoEnum).includes(formaPagamento)
+    return Object.values(FormasPagamentoEnum).includes(formaPagamento as FormasPagamentoEnum)
   }
 }

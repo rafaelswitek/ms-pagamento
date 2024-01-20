@@ -25,9 +25,9 @@ export default class CriarPagamentoUseCase {
       const dados = new Pagamento(
         pagamentoDto.pedidoId,
         parseFloat(pagamentoDto.valor),
-        StatusPedidoEnum[pagamentoDto.statusPedido as keyof typeof StatusPedidoEnum],
-        StatusPagamentoEnum[pagamentoDto.statusPagamento as keyof typeof StatusPagamentoEnum],
-        FormasPagamentoEnum[pagamentoDto.formaPagamento as keyof typeof FormasPagamentoEnum],
+        StatusPedidoEnum.RECEBIDO,
+        StatusPagamentoEnum.AGUARDANDO_PAGAMENTO,
+        pagamentoDto.formaPagamento as FormasPagamentoEnum,
       )
 
       const novoPagamento = await this.repository.criaPagamento(dados)
@@ -63,21 +63,12 @@ export default class CriarPagamentoUseCase {
   }
 
   private validarCampos(pagamentoDto: PagamentoDto): void {
-    if (!this.isStatusValid(pagamentoDto.statusPedido)) {
-      throw new Error('Status inválido')
-    }
-
     if (!this.isFormaPagamentoValid(pagamentoDto.formaPagamento)) {
       throw new Error('Forma de pagamento inválida')
     }
   }
 
-  private isStatusValid(status: string): boolean {
-    console.log(Object.keys(StatusPedidoEnum))
-    return Object.keys(StatusPedidoEnum).includes(status)
-  }
-
   private isFormaPagamentoValid(formaPagamento: string): boolean {
-    return Object.keys(FormasPagamentoEnum).includes(formaPagamento)
+    return Object.values(FormasPagamentoEnum).includes(formaPagamento as FormasPagamentoEnum)
   }
 }
