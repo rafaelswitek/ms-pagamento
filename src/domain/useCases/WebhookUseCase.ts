@@ -1,6 +1,8 @@
 import PagamentoDto from '../../app/dtos/pagamento.dto'
 import MercadoPagoService from '../../infra/services/MercadoPagoService'
+import NotificarService from '../../infra/services/NotificarService'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
+import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
 import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import InterfaceWebhook from '../interfaces/InterfaceWebhook'
 import AtualizarPagamentoUseCase from './AtualizarPagamentoUseCase'
@@ -11,11 +13,12 @@ interface Props {
   external_reference: string
 }
 
-export default class WebhookUseCase {
+class WebhookUseCase {
   constructor(
     private buscaPagamentoUseCase: BuscarPagamentoUseCase,
-    private mercadoPagoService: MercadoPagoService,
     private atualizaUseCase: AtualizarPagamentoUseCase,
+    private mercadoPagoService: MercadoPagoService,
+    private notificaService: NotificarService
   ) {}
 
   async executa(payload: InterfaceWebhook) {
@@ -28,16 +31,22 @@ export default class WebhookUseCase {
         const pagamentoDto = new PagamentoDto(
           pagamento!.pedidoId,
           pagamento!.valor.toString(),
-          'Pago' as keyof typeof StatusPedidoEnum,
-          'MercadoPago' as keyof typeof FormasPagamentoEnum,
+          StatusPedidoEnum.RECEBIDO,
+          StatusPagamentoEnum.PAGAMENTO_APROVADO,
+          FormasPagamentoEnum.MERCADO_PAGO,
           pagamento!.valor?.toString(),
           new Date().toString(),
           pagamento?.integrationId,
           pagamento?.qrCode,
+          id.toString(),
         )
+
+        this.notificaService.notificaOutrosMS(pagamentoDto)
 
         return this.atualizaUseCase.executa(id, pagamentoDto)
       }
     }
   }
 }
+
+export default WebhookUseCase
