@@ -1,5 +1,5 @@
 import PagamentoDto from '../../../src/app/dtos/pagamento.dto'
-import StatusEnum from '../../../src/domain/enums/StatusEnum'
+import StatusPedidoEnum from '../../../src/domain/enums/StatusPedidoEnum'
 import AtualizarPagamentoUseCase from '../../../src/domain/useCases/AtualizarPagamentoUseCase'
 import CriarPagamentoUseCase from '../../../src/domain/useCases/CriarPagamentoUseCase'
 import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/PagamentoRepositoryEmMemoria'
@@ -24,7 +24,8 @@ class MockHttpClient {
 
 const mockPagamentoDto: PagamentoDto = {
   valor: '12',
-  status: 'Pendente',
+  statusPedido: 'Recebido',
+  statusPagamento: 'Aguardando pagamento',
   formaPagamento: 'Pix',
   pedidoId: '1234',
 }
@@ -47,7 +48,8 @@ describe('AtualizarPagamentoUseCase', () => {
     const novoPagamento = await criarPagamentoUseCase.executa(mockPagamentoDto)
     const novo = {
       ...mockPagamentoDto,
-      status: 'Pago',
+      statusPedido: 'Recebido',
+      statusPagamento: 'Pagamento aprovado',
       pedidoId: '321',
       valorPago: '12',
       dataPagamento: Date.now().toString(),
@@ -55,7 +57,7 @@ describe('AtualizarPagamentoUseCase', () => {
 
     const retorno = await atualizarPagamentoUseCase.executa(novoPagamento.id, novo)
 
-    expect(retorno.pagamento!.status).toBe(StatusEnum.Pago)
+    expect(retorno.pagamento!.statusPedido).toBe(StatusPedidoEnum.RECEBIDO)
   })
 
   it('deve dar erro ao atualizar pagamento inexistente', async () => {
@@ -77,22 +79,41 @@ describe('AtualizarPagamentoUseCase', () => {
     )
   })
 
-  it('deve lançar uma exception de Status inválido', async () => {
+  it('deve lançar uma exception de Status de pedido inválido', async () => {
     const pagamentoRepository = new PagamentoRepositoryEmMemoria()
     const atualizarPagamentoUseCase = new AtualizarPagamentoUseCase(pagamentoRepository)
 
-    const mockPagamentoDto: PagamentoDto = {
-      valor: '12',
-      status: 'pendente',
-      formaPagamento: 'Pix',
-      pedidoId: '1234',
-    }
-
     try {
+      const mockPagamentoDto: PagamentoDto = {
+        valor: '12',
+        statusPedido: 'Aguardando',
+        statusPagamento: 'Aguardando pagamento',
+        formaPagamento: 'Pix',
+        pedidoId: '1234',
+      }
       await atualizarPagamentoUseCase.executa(1, mockPagamentoDto)
       fail('Deveria ter lançado uma exceção')
     } catch (error: any) {
-      expect(error.message).toBe('Erro ao criar pagamento: Status inválido')
+      expect(error.message).toBe('Erro ao atualizar pagamento: Status de pedido inválido')
+    }
+  })
+
+  it('deve lançar uma exception de Status de pagamento inválido', async () => {
+    const pagamentoRepository = new PagamentoRepositoryEmMemoria()
+    const atualizarPagamentoUseCase = new AtualizarPagamentoUseCase(pagamentoRepository)
+
+    try {
+      const mockPagamentoDto: PagamentoDto = {
+        valor: '12',
+        statusPedido: 'Recebido',
+        statusPagamento: 'Pago',
+        formaPagamento: 'Pix',
+        pedidoId: '1234',
+      }
+      await atualizarPagamentoUseCase.executa(1, mockPagamentoDto)
+      fail('Deveria ter lançado uma exceção')
+    } catch (error: any) {
+      expect(error.message).toBe('Erro ao atualizar pagamento: Status de pagamento inválido')
     }
   })
 
@@ -100,18 +121,18 @@ describe('AtualizarPagamentoUseCase', () => {
     const pagamentoRepository = new PagamentoRepositoryEmMemoria()
     const atualizarPagamentoUseCase = new AtualizarPagamentoUseCase(pagamentoRepository)
 
-    const mockPagamentoDto: PagamentoDto = {
-      valor: '12',
-      status: 'Pendente',
-      formaPagamento: 'pix',
-      pedidoId: '1234',
-    }
-
     try {
+      const mockPagamentoDto: PagamentoDto = {
+        valor: '12',
+        statusPedido: 'Recebido',
+        statusPagamento: 'Aguardando pagamento',
+        formaPagamento: 'pix',
+        pedidoId: '1234',
+      }
       await atualizarPagamentoUseCase.executa(1, mockPagamentoDto)
       fail('Deveria ter lançado uma exceção')
     } catch (error: any) {
-      expect(error.message).toBe('Erro ao criar pagamento: Forma de pagamento inválida')
+      expect(error.message).toBe('Erro ao atualizar pagamento: Forma de pagamento inválida')
     }
   })
 })

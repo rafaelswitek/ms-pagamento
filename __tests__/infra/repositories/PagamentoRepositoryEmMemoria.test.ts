@@ -1,12 +1,19 @@
 import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/PagamentoRepositoryEmMemoria'
 import Pagamento from '../../../src/domain/entities/Pagamento'
-import StatusEnum from '../../../src/domain/enums/StatusEnum'
+import StatusPedidoEnum from '../../../src/domain/enums/StatusPedidoEnum'
 import FormasPagamentoEnum from '../../../src/domain/enums/FormasPagamentoEnum'
 import InterfacePagamentoRepository from '../../../src/domain/interfaces/InterfacePagamentoRepository'
+import StatusPagamentoEnum from '../../../src/domain/enums/StatusPagamentoEnum'
 
 describe('PagamentoRepositoryEmMemoria', () => {
   let repository: InterfacePagamentoRepository
-  const pagamento = new Pagamento('pedido123', 100.0, StatusEnum.Pendente, FormasPagamentoEnum.MercadoPago)
+  const pagamento = new Pagamento(
+    'pedido123',
+    100.0,
+    StatusPedidoEnum.RECEBIDO,
+    StatusPagamentoEnum.AGUARDANDO_PAGAMENTO,
+    FormasPagamentoEnum.MERCADO_PAGO,
+  )
 
   beforeEach(() => {
     repository = new PagamentoRepositoryEmMemoria()
@@ -44,7 +51,13 @@ describe('PagamentoRepositoryEmMemoria', () => {
   it('deve atualizar um pagamento', async () => {
     const pagamentoCriado = await repository.criaPagamento(pagamento)
 
-    const newData = new Pagamento('pedido123', 100.0, StatusEnum.Pago, FormasPagamentoEnum.MercadoPago)
+    const newData = new Pagamento(
+      'pedido123',
+      100.0,
+      StatusPedidoEnum.RECEBIDO,
+      StatusPagamentoEnum.PAGAMENTO_APROVADO,
+      FormasPagamentoEnum.MERCADO_PAGO,
+    )
     const result = await repository.atualizaPagamento(pagamentoCriado.id, newData)
     expect(result.success).toBe(true)
   })

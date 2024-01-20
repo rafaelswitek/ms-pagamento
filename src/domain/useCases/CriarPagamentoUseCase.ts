@@ -3,8 +3,9 @@ import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import InterfacePagamentoRepository from '../interfaces/InterfacePagamentoRepository'
 import Pagamento from '../entities/Pagamento'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
-import StatusEnum from '../enums/StatusEnum'
+import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import PagamentoDto from '../../app/dtos/pagamento.dto'
+import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
 
 interface QrCodeResposta {
   in_store_order_id: string
@@ -24,8 +25,9 @@ export default class CriarPagamentoUseCase {
       const dados = new Pagamento(
         pagamentoDto.pedidoId,
         parseFloat(pagamentoDto.valor),
-        StatusEnum[pagamentoDto.status as keyof typeof StatusEnum],
-        FormasPagamentoEnum[pagamentoDto.formaPagamento as keyof typeof FormasPagamentoEnum],
+        StatusPedidoEnum.RECEBIDO,
+        StatusPagamentoEnum.AGUARDANDO_PAGAMENTO,
+        pagamentoDto.formaPagamento as FormasPagamentoEnum,
       )
 
       const novoPagamento = await this.repository.criaPagamento(dados)
@@ -61,20 +63,12 @@ export default class CriarPagamentoUseCase {
   }
 
   private validarCampos(pagamentoDto: PagamentoDto): void {
-    if (!this.isStatusValid(pagamentoDto.status)) {
-      throw new Error('Status inválido')
-    }
-
     if (!this.isFormaPagamentoValid(pagamentoDto.formaPagamento)) {
       throw new Error('Forma de pagamento inválida')
     }
   }
 
-  private isStatusValid(status: string): boolean {
-    return Object.keys(StatusEnum).includes(status)
-  }
-
   private isFormaPagamentoValid(formaPagamento: string): boolean {
-    return Object.keys(FormasPagamentoEnum).includes(formaPagamento)
+    return Object.values(FormasPagamentoEnum).includes(formaPagamento as FormasPagamentoEnum)
   }
 }

@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
-import StatusEnum from '../enums/StatusEnum'
+import StatusPedidoEnum from '../enums/StatusPedidoEnum'
+import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
 
 @Entity()
 export default class Pagamento {
@@ -11,7 +12,9 @@ export default class Pagamento {
   @Column()
   valor: number
   @Column()
-  status: StatusEnum
+  statusPedido: StatusPedidoEnum
+  @Column()
+  statusPagamento: StatusPagamentoEnum
   @Column()
   formaPagamento: FormasPagamentoEnum
   @Column({ nullable: true })
@@ -26,14 +29,16 @@ export default class Pagamento {
   constructor(
     pedidoId: string,
     valor: number,
-    status: StatusEnum,
+    statusPedido: StatusPedidoEnum,
+    statusPagamento: StatusPagamentoEnum,
     formaPagamento: FormasPagamentoEnum,
     valorPago?: number,
     dataPagamento?: Date,
   ) {
     this.pedidoId = pedidoId
     this.valor = valor
-    this.status = status
+    this.statusPedido = statusPedido
+    this.statusPagamento = statusPagamento
     this.formaPagamento = formaPagamento
     this.valorPago = valorPago
     this.dataPagamento = dataPagamento

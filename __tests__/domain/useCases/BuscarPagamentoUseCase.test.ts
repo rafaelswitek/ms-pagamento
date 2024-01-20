@@ -38,7 +38,8 @@ describe('BuscarPagamentoUseCase', () => {
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
-      status: 'Pendente',
+      statusPedido: 'Pendente',
+      statusPagamento: 'Pendente',
       formaPagamento: 'Pix',
       pedidoId: '1234',
     }

@@ -144,7 +144,8 @@ Para abrir o swagger vá para o navegador e abra o link [http://localhost/](http
 |  |  |  └── Pagamento.ts
 |  |  ├── enums
 |  |  |  ├── FormasPagamentoEnum.ts
-|  |  |  └── StatusEnum.ts
+|  |  |  └── StatusPagamentoEnum.ts
+|  |  |  └── StatusPedidoEnum.ts
 |  |  ├── interfaces
 |  |  |  ├── HttpClient.ts
 |  |  |  ├── InterfacePagamentoRepository.ts
