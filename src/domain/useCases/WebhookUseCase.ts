@@ -24,7 +24,7 @@ class WebhookUseCase {
   async executa(payload: InterfaceWebhook) {
     if (payload.topic == 'merchant_order') {
       const resposta = await this.mercadoPagoService.consultarStatus(payload.resource)
-      const dados = resposta.data as Props
+      const dados = resposta as Props
       if (resposta && dados && dados.order_status === 'paid') {
         const id = parseInt(dados.external_reference)
         const { pagamento } = await this.buscaPagamentoUseCase.executa(id)
