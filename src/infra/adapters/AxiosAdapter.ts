@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import axios from 'axios'
 import HttpClient from '../../domain/interfaces/HttpClient'
 
 export default class AxiosAdapter implements HttpClient {

@@ -39,7 +39,7 @@ describe('CriarPagamentoUseCase', () => {
       valor: '12',
       statusPedido: 'Recebido',
       statusPagamento: 'Aguardando pagamento',
-      formaPagamento: 'Pix',
+      formaPagamento: 'Mercado Pago',
       pedidoId: '1234',
     }
 

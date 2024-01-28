@@ -14,7 +14,7 @@ describe('CriarPagamentoController', () => {
       pedidoId: '1234',
       valor: 12,
       status: 'pendente',
-      formaPagamento: 'pix',
+      formaPagamento: 'Mercado Pago',
       valorPago: null,
       dataPagamento: null,
       id: 13,

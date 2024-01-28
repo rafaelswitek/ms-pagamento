@@ -6,7 +6,7 @@ export default class RemoverPagamentoUseCase {
 
   async executa(id: number): Promise<InterfacePagamentoResposta> {
     try {
-      return this.repository.deletaPagamento(id)
+      return await this.repository.deletaPagamento(id)
     } catch (error: any) {
       throw new Error(`Erro ao remover pagamento: ${error.message}`)
     }

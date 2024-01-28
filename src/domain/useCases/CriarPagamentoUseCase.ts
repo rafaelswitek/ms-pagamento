@@ -22,22 +22,33 @@ export default class CriarPagamentoUseCase {
     try {
       this.validarCampos(pagamentoDto)
 
+      const statusPagamento =
+        pagamentoDto.formaPagamento == FormasPagamentoEnum.MERCADO_PAGO
+          ? StatusPagamentoEnum.AGUARDANDO_PAGAMENTO
+          : StatusPagamentoEnum.PAGAMENTO_APROVADO
+
       const dados = new Pagamento(
         pagamentoDto.pedidoId,
         parseFloat(pagamentoDto.valor),
         StatusPedidoEnum.RECEBIDO,
-        StatusPagamentoEnum.AGUARDANDO_PAGAMENTO,
+        statusPagamento,
         pagamentoDto.formaPagamento as FormasPagamentoEnum,
+        pagamentoDto.formaPagamento == FormasPagamentoEnum.MERCADO_PAGO ? undefined : Number(pagamentoDto.valor),
+        pagamentoDto.formaPagamento == FormasPagamentoEnum.MERCADO_PAGO ? undefined : new Date(),
       )
 
       const novoPagamento = await this.repository.criaPagamento(dados)
-      const resposta = await this.gerarQrCode(novoPagamento)
 
-      novoPagamento.setIntegrationId(resposta.in_store_order_id)
-      novoPagamento.setQrCode(resposta.qr_data)
+      if (pagamentoDto.formaPagamento == FormasPagamentoEnum.MERCADO_PAGO) {
+        const resposta = await this.gerarQrCode(novoPagamento)
 
-      const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
-      return pagamentoAtualizado.pagamento!
+        novoPagamento.setIntegrationId(resposta.in_store_order_id)
+        novoPagamento.setQrCode(resposta.qr_data)
+        const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
+        return pagamentoAtualizado.pagamento!
+      }
+
+      return novoPagamento
     } catch (error: any) {
       throw new Error(`Erro ao criar pagamento: ${error.message}`)
     }
