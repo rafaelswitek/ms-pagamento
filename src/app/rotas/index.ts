@@ -19,7 +19,7 @@ import NotificarService from '../../infra/services/NotificarService'
 const router = (app: express.Router) => {
   const httpClient = new AxiosAdapter()
   const mercadoPagoService = new MercadoPagoService(httpClient)
-  const notificaService = new NotificarService(httpClient)
+  const notificaService = new NotificarService()
 
   const pagamentoRepository = new PagamentoRepository(AppDataSource.getRepository('Pagamento'))
   const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
