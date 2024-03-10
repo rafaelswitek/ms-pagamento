@@ -15,11 +15,9 @@ import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import WebhookController from '../controllers/WebhookController'
 import WebhookUseCase from '../../domain/useCases/WebhookUseCase'
 import AxiosAdapter from '../../infra/adapters/AxiosAdapter'
-import NotificarService from '../../infra/services/NotificarService'
 const router = (app: express.Router) => {
   const httpClient = new AxiosAdapter()
   const mercadoPagoService = new MercadoPagoService(httpClient)
-  const notificaService = new NotificarService()
 
   const pagamentoRepository = new PagamentoRepository(AppDataSource.getRepository('Pagamento'))
   const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
@@ -37,7 +35,7 @@ const router = (app: express.Router) => {
   const removerUseCase = new RemoverPagamentoUseCase(pagamentoRepository)
   const removerPagamentoController = new RemoverPagamentoController(removerUseCase)
 
-  const webhookUseCase = new WebhookUseCase(buscarUseCase, atualizaUseCase, mercadoPagoService, notificaService)
+  const webhookUseCase = new WebhookUseCase(buscarUseCase, atualizaUseCase, mercadoPagoService)
   const webhookController = new WebhookController(webhookUseCase)
 
   app.post('/pagamento', (req, res) => criarPagamentoController.processar(req, res))
