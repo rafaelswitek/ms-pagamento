@@ -1,5 +1,5 @@
 import PagamentoDto from '../../app/dtos/pagamento.dto'
-import RabbitmqAdapter from '../../infra/adapters/RabbitMqAdapter'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'

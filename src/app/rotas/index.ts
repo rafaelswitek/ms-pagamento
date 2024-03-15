@@ -15,7 +15,7 @@ import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import WebhookController from '../controllers/WebhookController'
 import WebhookUseCase from '../../domain/useCases/WebhookUseCase'
 import AxiosAdapter from '../../infra/adapters/AxiosAdapter'
-import RabbitmqAdapter from '../../infra/adapters/RabbitMqAdapter'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 const router = (app: express.Router) => {
   const httpClient = new AxiosAdapter()
   const mercadoPagoService = new MercadoPagoService(httpClient)

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import CriarPagamentoUseCase from '../../domain/useCases/CriarPagamentoUseCase'
 import PagamentoDto from '../dtos/pagamento.dto'
-import RabbitmqAdapter from '../../infra/adapters/RabbitMqAdapter'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 
 export default class CriarPagamentoController {
   constructor(

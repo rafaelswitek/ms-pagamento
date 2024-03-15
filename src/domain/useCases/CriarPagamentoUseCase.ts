@@ -6,7 +6,7 @@ import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import PagamentoDto from '../../app/dtos/pagamento.dto'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
-import RabbitmqAdapter from '../../infra/adapters/RabbitMqAdapter'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 
 interface QrCodeResposta {
   in_store_order_id: string
