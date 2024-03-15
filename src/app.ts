@@ -5,15 +5,17 @@ import rotas from './app/rotas'
 
 const app = express()
 
-var helmet = require('helmet');
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
+const helmet = require('helmet')
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+      },
     },
-  },
-}));
+  }),
+)
 
 app.disable('x-powered-by')
 

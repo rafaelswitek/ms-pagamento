@@ -40,9 +40,9 @@ class WebhookUseCase {
           id.toString(),
         )
 
-        const rabbitmq = new RabbitmqServer(process.env.QUEUE_URL!);
-        await rabbitmq.start();
-        await rabbitmq.publishInQueue(process.env.QUEUE_2!, JSON.stringify(pagamento));
+        const rabbitmq = new RabbitmqServer(process.env.QUEUE_URL!)
+        await rabbitmq.start()
+        await rabbitmq.publishInQueue(process.env.QUEUE_2!, JSON.stringify(pagamento))
 
         return this.atualizaUseCase.executa(id, pagamentoDto)
       }

@@ -47,10 +47,10 @@ export default class CriarPagamentoUseCase {
         novoPagamento.setQrCode(resposta.qr_data)
         const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
         return pagamentoAtualizado.pagamento!
-      }else {
-        const rabbitmq = new RabbitmqServer(process.env.QUEUE_URL!);
-        await rabbitmq.start();
-        await rabbitmq.publishInQueue(process.env.QUEUE_2!, JSON.stringify(novoPagamento));
+      } else {
+        const rabbitmq = new RabbitmqServer(process.env.QUEUE_URL!)
+        await rabbitmq.start()
+        await rabbitmq.publishInQueue(process.env.QUEUE_2!, JSON.stringify(novoPagamento))
       }
 
       return novoPagamento

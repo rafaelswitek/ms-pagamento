@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   db:
@@ -15,21 +15,21 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-postech}
       MYSQL_HOST: ${MYSQL_HOST:-localhost}
     ports:
-      - "3307:3306"
+      - '3307:3306'
     volumes:
       - volume_db:/var/lib/mysql
     networks:
       - postech_net
 
   rabbitmq:
-    image: "rabbitmq:3.8-management-alpine"
+    image: 'rabbitmq:3.8-management-alpine'
     container_name: rabbitmq
     hostname: rabbitmq
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - '15672:15672'
+      - '5672:5672'
     volumes:
-      - "./.rabbitmq_data:/var/lib/rabbitmq/mnesia"
+      - './.rabbitmq_data:/var/lib/rabbitmq/mnesia'
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-admin}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-admin}
@@ -42,7 +42,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - db
       - rabbitmq

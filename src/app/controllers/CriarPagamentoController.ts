@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
 import CriarPagamentoUseCase from '../../domain/useCases/CriarPagamentoUseCase'
 import PagamentoDto from '../dtos/pagamento.dto'
-import RabbitmqServer from '../../infra/config/rabbitmq-server';
+import RabbitmqServer from '../../infra/config/rabbitmq-server'
 
 export default class CriarPagamentoController {
   constructor(private readonly useCase: CriarPagamentoUseCase) {
-    this.subscribeToQueues();
+    this.subscribeToQueues()
   }
 
   async processar(req: Request, res: Response) {
@@ -21,14 +21,13 @@ export default class CriarPagamentoController {
   }
 
   private async subscribeToQueues() {
-    const server = new RabbitmqServer(process.env.QUEUE_URL!);
-    await server.start();
+    const server = new RabbitmqServer(process.env.QUEUE_URL!)
+    await server.start()
     await server.consume(process.env.QUEUE_1!, async (message) => {
       console.log('lendo fila: ' + message.content.toString())
-      const pagamentoDto = JSON.parse(message.content.toString()) as PagamentoDto;
+      const pagamentoDto = JSON.parse(message.content.toString()) as PagamentoDto
 
       await this.useCase.executa(pagamentoDto)
-    });
+    })
   }
 }
-
