@@ -26,7 +26,6 @@ export default class CriarPagamentoController {
   private async subscribeToQueues() {
     await this.queue.start()
     await this.queue.consume(process.env.QUEUE_1!, async (message) => {
-      console.log('lendo fila: ' + message.content.toString())
       const pagamentoDto = JSON.parse(message.content.toString()) as PagamentoDto
 
       await this.useCase.executa(pagamentoDto)
