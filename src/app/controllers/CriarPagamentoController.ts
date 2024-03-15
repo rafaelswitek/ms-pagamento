@@ -1,10 +1,13 @@
 import { Request, Response } from 'express'
 import CriarPagamentoUseCase from '../../domain/useCases/CriarPagamentoUseCase'
 import PagamentoDto from '../dtos/pagamento.dto'
-import RabbitmqServer from '../../infra/config/rabbitmq-server'
+import RabbitmqAdapter from '../../infra/adapters/RabbitMqAdapter'
 
 export default class CriarPagamentoController {
-  constructor(private readonly useCase: CriarPagamentoUseCase) {
+  constructor(
+    private readonly useCase: CriarPagamentoUseCase,
+    private readonly queue: RabbitmqAdapter,
+  ) {
     this.subscribeToQueues()
   }
 
@@ -21,9 +24,8 @@ export default class CriarPagamentoController {
   }
 
   private async subscribeToQueues() {
-    const server = new RabbitmqServer(process.env.QUEUE_URL!)
-    await server.start()
-    await server.consume(process.env.QUEUE_1!, async (message) => {
+    await this.queue.start()
+    await this.queue.consume(process.env.QUEUE_1!, async (message) => {
       console.log('lendo fila: ' + message.content.toString())
       const pagamentoDto = JSON.parse(message.content.toString()) as PagamentoDto
 

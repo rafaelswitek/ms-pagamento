@@ -1,5 +1,5 @@
 import PagamentoDto from '../../app/dtos/pagamento.dto'
-import RabbitmqServer from '../../infra/config/rabbitmq-server'
+import RabbitmqAdapter from '../../infra/adapters/RabbitMqAdapter'
 import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
@@ -18,6 +18,7 @@ class WebhookUseCase {
     private buscaPagamentoUseCase: BuscarPagamentoUseCase,
     private atualizaUseCase: AtualizarPagamentoUseCase,
     private mercadoPagoService: MercadoPagoService,
+    private queue: RabbitmqAdapter,
   ) {}
 
   async executa(payload: InterfaceWebhook) {
@@ -40,9 +41,8 @@ class WebhookUseCase {
           id.toString(),
         )
 
-        const rabbitmq = new RabbitmqServer(process.env.QUEUE_URL!)
-        await rabbitmq.start()
-        await rabbitmq.publishInQueue(process.env.QUEUE_2!, JSON.stringify(pagamento))
+        await this.queue.start()
+        await this.queue.publishInQueue(process.env.QUEUE_2!, JSON.stringify(pagamento))
 
         return this.atualizaUseCase.executa(id, pagamentoDto)
       }

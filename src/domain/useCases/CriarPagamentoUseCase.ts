@@ -6,7 +6,7 @@ import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import PagamentoDto from '../../app/dtos/pagamento.dto'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
-import RabbitmqServer from '../../infra/config/rabbitmq-server'
+import RabbitmqAdapter from '../../infra/adapters/RabbitMqAdapter'
 
 interface QrCodeResposta {
   in_store_order_id: string
@@ -17,6 +17,7 @@ export default class CriarPagamentoUseCase {
   constructor(
     private repository: InterfacePagamentoRepository,
     private mercadoPagoService: MercadoPagoService,
+    private queue: RabbitmqAdapter,
   ) {}
 
   async executa(pagamentoDto: PagamentoDto): Promise<Pagamento> {
@@ -48,9 +49,8 @@ export default class CriarPagamentoUseCase {
         const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
         return pagamentoAtualizado.pagamento!
       } else {
-        const rabbitmq = new RabbitmqServer(process.env.QUEUE_URL!)
-        await rabbitmq.start()
-        await rabbitmq.publishInQueue(process.env.QUEUE_2!, JSON.stringify(novoPagamento))
+        await this.queue.start()
+        await this.queue.publishInQueue(process.env.QUEUE_2!, JSON.stringify(novoPagamento))
       }
 
       return novoPagamento
