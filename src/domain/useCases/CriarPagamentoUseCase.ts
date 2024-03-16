@@ -6,6 +6,7 @@ import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import PagamentoDto from '../../app/dtos/pagamento.dto'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
+import QueueConnection from '../interfaces/QueueConnection'
 
 interface QrCodeResposta {
   in_store_order_id: string
@@ -16,6 +17,7 @@ export default class CriarPagamentoUseCase {
   constructor(
     private repository: InterfacePagamentoRepository,
     private mercadoPagoService: MercadoPagoService,
+    private queue: QueueConnection,
   ) {}
 
   async executa(pagamentoDto: PagamentoDto): Promise<Pagamento> {
@@ -46,6 +48,9 @@ export default class CriarPagamentoUseCase {
         novoPagamento.setQrCode(resposta.qr_data)
         const pagamentoAtualizado = await this.repository.atualizaPagamento(novoPagamento.id, novoPagamento)
         return pagamentoAtualizado.pagamento!
+      } else {
+        await this.queue.start()
+        await this.queue.publishInQueue(process.env.QUEUE_2!, JSON.stringify(novoPagamento))
       }
 
       return novoPagamento

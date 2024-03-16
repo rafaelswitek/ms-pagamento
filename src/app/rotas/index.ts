@@ -15,15 +15,15 @@ import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import WebhookController from '../controllers/WebhookController'
 import WebhookUseCase from '../../domain/useCases/WebhookUseCase'
 import AxiosAdapter from '../../infra/adapters/AxiosAdapter'
-import NotificarService from '../../infra/services/NotificarService'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 const router = (app: express.Router) => {
   const httpClient = new AxiosAdapter()
   const mercadoPagoService = new MercadoPagoService(httpClient)
-  const notificaService = new NotificarService(httpClient)
+  const queue = new RabbitmqAdapter(process.env.QUEUE_URL!)
 
   const pagamentoRepository = new PagamentoRepository(AppDataSource.getRepository('Pagamento'))
-  const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
-  const criarPagamentoController = new CriarPagamentoController(criaUseCase)
+  const criaUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService, queue)
+  const criarPagamentoController = new CriarPagamentoController(criaUseCase, queue)
 
   const atualizaUseCase = new AtualizarPagamentoUseCase(pagamentoRepository)
   const atualizaPagamentoController = new AtualizarPagamentoController(atualizaUseCase)
@@ -37,7 +37,7 @@ const router = (app: express.Router) => {
   const removerUseCase = new RemoverPagamentoUseCase(pagamentoRepository)
   const removerPagamentoController = new RemoverPagamentoController(removerUseCase)
 
-  const webhookUseCase = new WebhookUseCase(buscarUseCase, atualizaUseCase, mercadoPagoService, notificaService)
+  const webhookUseCase = new WebhookUseCase(buscarUseCase, atualizaUseCase, mercadoPagoService, queue)
   const webhookController = new WebhookController(webhookUseCase)
 
   app.post('/pagamento', (req, res) => criarPagamentoController.processar(req, res))

@@ -19,7 +19,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: "#/components/schemas/Pagamento" }
+                items: { $ref: '#/components/schemas/Pagamento' }
     post:
       summary: Criar um novo pagamento
       tags:
@@ -45,13 +45,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pagamento"
+                $ref: '#/components/schemas/Pagamento'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /pagamento/{id}:
     parameters:
       - in: path
@@ -70,13 +70,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pagamento"
+                $ref: '#/components/schemas/Pagamento'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     put:
       summary: Atualizar um pagamento
       tags:
@@ -102,13 +102,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pagamento"
+                $ref: '#/components/schemas/Pagamento'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     delete:
       summary: Deletar um pagamento
       tags:
@@ -119,13 +119,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pagamento"
+                $ref: '#/components/schemas/Pagamento'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /pagamento/webhook:
     post:
       summary: Receber um webhook do Mercado Pago
@@ -145,7 +145,7 @@ paths:
       responses:
         200:
           description: Success
-    
+
 components:
   schemas:
     Error:

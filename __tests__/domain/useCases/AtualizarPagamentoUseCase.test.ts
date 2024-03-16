@@ -4,6 +4,7 @@ import AtualizarPagamentoUseCase from '../../../src/domain/useCases/AtualizarPag
 import CriarPagamentoUseCase from '../../../src/domain/useCases/CriarPagamentoUseCase'
 import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/PagamentoRepositoryEmMemoria'
 import MercadoPagoService from '../../../src/infra/services/MercadoPagoService'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 
 class MockHttpClient {
   async post(url: string, data: string, config: any): Promise<any> {
@@ -33,6 +34,7 @@ const mockPagamentoDto: PagamentoDto = {
 describe('AtualizarPagamentoUseCase', () => {
   let mercadoPagoService: MercadoPagoService
   let mockHttpClient: MockHttpClient
+  const mockQueue = new RabbitmqAdapter();
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -43,7 +45,7 @@ describe('AtualizarPagamentoUseCase', () => {
   it('deve atualizar um novo pagamento com sucesso', async () => {
     const pagamentoRepository = new PagamentoRepositoryEmMemoria()
     const atualizarPagamentoUseCase = new AtualizarPagamentoUseCase(pagamentoRepository)
-    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
+    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService, mockQueue)
 
     const novoPagamento = await criarPagamentoUseCase.executa(mockPagamentoDto)
     const novo = {

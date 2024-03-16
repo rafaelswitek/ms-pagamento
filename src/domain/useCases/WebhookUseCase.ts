@@ -1,10 +1,10 @@
 import PagamentoDto from '../../app/dtos/pagamento.dto'
 import MercadoPagoService from '../../infra/services/MercadoPagoService'
-import NotificarService from '../../infra/services/NotificarService'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
 import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import InterfaceWebhook from '../interfaces/InterfaceWebhook'
+import QueueConnection from '../interfaces/QueueConnection'
 import AtualizarPagamentoUseCase from './AtualizarPagamentoUseCase'
 import BuscarPagamentoUseCase from './BuscarPagamentoUseCase'
 
@@ -18,7 +18,7 @@ class WebhookUseCase {
     private buscaPagamentoUseCase: BuscarPagamentoUseCase,
     private atualizaUseCase: AtualizarPagamentoUseCase,
     private mercadoPagoService: MercadoPagoService,
-    private notificaService: NotificarService
+    private queue: QueueConnection,
   ) {}
 
   async executa(payload: InterfaceWebhook) {
@@ -41,7 +41,8 @@ class WebhookUseCase {
           id.toString(),
         )
 
-        this.notificaService.notificaOutrosMS(pagamentoDto)
+        await this.queue.start()
+        await this.queue.publishInQueue(process.env.QUEUE_2!, JSON.stringify(pagamento))
 
         return this.atualizaUseCase.executa(id, pagamentoDto)
       }

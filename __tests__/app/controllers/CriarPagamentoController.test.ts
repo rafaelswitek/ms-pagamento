@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import CriarPagamentoController from '../../../src/app/controllers/CriarPagamentoController'
 import CriarPagamentoUseCase from '../../../src/domain/useCases/CriarPagamentoUseCase'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 
 describe('CriarPagamentoController', () => {
   it('deve retornar status 201 ao criar um pagamento com sucesso', async () => {
@@ -26,8 +27,9 @@ describe('CriarPagamentoController', () => {
     const mockCriarPagamentoUseCase = {
       executa: jest.fn(() => Promise.resolve(mockResposta)),
     } as unknown as CriarPagamentoUseCase
+    const mockQueue = new RabbitmqAdapter();
 
-    const criarPagamentoController = new CriarPagamentoController(mockCriarPagamentoUseCase)
+    const criarPagamentoController = new CriarPagamentoController(mockCriarPagamentoUseCase, mockQueue)
 
     await criarPagamentoController.processar(mockRequest, mockResponse)
 
@@ -46,7 +48,9 @@ describe('CriarPagamentoController', () => {
       executa: jest.fn(() => Promise.reject(new Error('Erro interno'))),
     } as unknown as CriarPagamentoUseCase
 
-    const criarPagamentoController = new CriarPagamentoController(mockCriarPagamentoUseCase)
+    const mockQueue = new RabbitmqAdapter();
+
+    const criarPagamentoController = new CriarPagamentoController(mockCriarPagamentoUseCase, mockQueue)
 
     await criarPagamentoController.processar(mockRequest, mockResponse)
 

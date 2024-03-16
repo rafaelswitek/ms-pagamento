@@ -1,9 +1,15 @@
 import { Request, Response } from 'express'
 import CriarPagamentoUseCase from '../../domain/useCases/CriarPagamentoUseCase'
 import PagamentoDto from '../dtos/pagamento.dto'
+import QueueConnection from '../../domain/interfaces/QueueConnection'
 
 export default class CriarPagamentoController {
-  constructor(private readonly useCase: CriarPagamentoUseCase) {}
+  constructor(
+    private readonly useCase: CriarPagamentoUseCase,
+    private readonly queue: QueueConnection,
+  ) {
+    this.subscribeToQueues()
+  }
 
   async processar(req: Request, res: Response) {
     try {
@@ -15,5 +21,14 @@ export default class CriarPagamentoController {
     } catch (error: any) {
       return res.status(500).json({ error: error.message })
     }
+  }
+
+  private async subscribeToQueues() {
+    await this.queue.start()
+    await this.queue.consume(process.env.QUEUE_1!, async (message) => {
+      const pagamentoDto = JSON.parse(message.content.toString()) as PagamentoDto
+
+      await this.useCase.executa(pagamentoDto)
+    })
   }
 }

@@ -3,6 +3,7 @@ version: '3'
 services:
   db:
     image: mariadb:10.9-jammy
+    container_name: mariadb
     restart: always
     env_file:
       - .env
@@ -20,7 +21,23 @@ services:
     networks:
       - postech_net
 
+  rabbitmq:
+    image: 'rabbitmq:3.8-management-alpine'
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    volumes:
+      - './.rabbitmq_data:/var/lib/rabbitmq/mnesia'
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-admin}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-admin}
+    networks:
+      - postech_net
+
   app:
+    container_name: node
     build:
       context: .
       dockerfile: Dockerfile
@@ -28,20 +45,9 @@ services:
       - '3000:3000'
     depends_on:
       - db
+      - rabbitmq
     networks:
       - postech_net
-
-  swagger-ui:
-    depends_on:
-      - app
-    image: swaggerapi/swagger-ui
-    container_name: swagger_ui_container
-    ports:
-      - "80:8080"
-    volumes:
-      - ./swagger:/usr/share/nginx/html/swagger
-    environment:
-      API_URL: /swagger/openapi.yaml
 
 networks:
   postech_net:
