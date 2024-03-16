@@ -6,7 +6,7 @@ import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import PagamentoDto from '../../app/dtos/pagamento.dto'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
-import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
+import QueueConnection from '../interfaces/QueueConnection'
 
 interface QrCodeResposta {
   in_store_order_id: string
@@ -17,7 +17,7 @@ export default class CriarPagamentoUseCase {
   constructor(
     private repository: InterfacePagamentoRepository,
     private mercadoPagoService: MercadoPagoService,
-    private queue: RabbitmqAdapter,
+    private queue: QueueConnection,
   ) {}
 
   async executa(pagamentoDto: PagamentoDto): Promise<Pagamento> {

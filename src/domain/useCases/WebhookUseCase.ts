@@ -1,10 +1,10 @@
 import PagamentoDto from '../../app/dtos/pagamento.dto'
-import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 import MercadoPagoService from '../../infra/services/MercadoPagoService'
 import FormasPagamentoEnum from '../enums/FormasPagamentoEnum'
 import StatusPagamentoEnum from '../enums/StatusPagamentoEnum'
 import StatusPedidoEnum from '../enums/StatusPedidoEnum'
 import InterfaceWebhook from '../interfaces/InterfaceWebhook'
+import QueueConnection from '../interfaces/QueueConnection'
 import AtualizarPagamentoUseCase from './AtualizarPagamentoUseCase'
 import BuscarPagamentoUseCase from './BuscarPagamentoUseCase'
 
@@ -18,7 +18,7 @@ class WebhookUseCase {
     private buscaPagamentoUseCase: BuscarPagamentoUseCase,
     private atualizaUseCase: AtualizarPagamentoUseCase,
     private mercadoPagoService: MercadoPagoService,
-    private queue: RabbitmqAdapter,
+    private queue: QueueConnection,
   ) {}
 
   async executa(payload: InterfaceWebhook) {

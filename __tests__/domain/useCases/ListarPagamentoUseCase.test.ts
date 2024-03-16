@@ -3,6 +3,7 @@ import CriarPagamentoUseCase from '../../../src/domain/useCases/CriarPagamentoUs
 import ListarPagamentoUseCase from '../../../src/domain/useCases/ListarPagamentoUseCase'
 import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/PagamentoRepositoryEmMemoria'
 import MercadoPagoService from '../../../src/infra/services/MercadoPagoService'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 
 class MockHttpClient {
   async post(url: string, data: string, config: any): Promise<any> {
@@ -24,6 +25,7 @@ class MockHttpClient {
 describe('ListarPagamentoUseCase', () => {
   let mercadoPagoService: MercadoPagoService
   let mockHttpClient: MockHttpClient
+  const mockQueue = new RabbitmqAdapter();
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -33,7 +35,7 @@ describe('ListarPagamentoUseCase', () => {
 
   it('deve listar dois pagamentos', async () => {
     const pagamentoRepository = new PagamentoRepositoryEmMemoria()
-    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
+    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService, mockQueue)
     const listarPagamentoUseCase = new ListarPagamentoUseCase(pagamentoRepository)
 
     const mockPagamentoDto: PagamentoDto = {

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
 import CriarPagamentoUseCase from '../../domain/useCases/CriarPagamentoUseCase'
 import PagamentoDto from '../dtos/pagamento.dto'
-import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
+import QueueConnection from '../../domain/interfaces/QueueConnection'
 
 export default class CriarPagamentoController {
   constructor(
     private readonly useCase: CriarPagamentoUseCase,
-    private readonly queue: RabbitmqAdapter,
+    private readonly queue: QueueConnection,
   ) {
     this.subscribeToQueues()
   }

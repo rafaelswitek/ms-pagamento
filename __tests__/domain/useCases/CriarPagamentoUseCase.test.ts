@@ -3,6 +3,7 @@ import StatusPedidoEnum from '../../../src/domain/enums/StatusPedidoEnum'
 import CriarPagamentoUseCase from '../../../src/domain/useCases/CriarPagamentoUseCase'
 import PagamentoRepositoryEmMemoria from '../../../src/infra/repositories/PagamentoRepositoryEmMemoria'
 import MercadoPagoService from '../../../src/infra/services/MercadoPagoService'
+import RabbitmqAdapter from '../../infra/adapters/RabbitmqAdapter'
 
 class MockHttpClient {
   async post(url: string, data: string, config: any): Promise<any> {
@@ -21,9 +22,11 @@ class MockHttpClient {
   }
 }
 
+
 describe('CriarPagamentoUseCase', () => {
   let mercadoPagoService: MercadoPagoService
   let mockHttpClient: MockHttpClient
+  const mockQueue = new RabbitmqAdapter();
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -33,7 +36,7 @@ describe('CriarPagamentoUseCase', () => {
 
   it('deve criar um novo pagamento com sucesso', async () => {
     const pagamentoRepository = new PagamentoRepositoryEmMemoria()
-    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
+    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService, mockQueue)
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
@@ -54,7 +57,7 @@ describe('CriarPagamentoUseCase', () => {
 
   it('deve lançar uma exception de Forma de pagamento inválida', async () => {
     const pagamentoRepository = new PagamentoRepositoryEmMemoria()
-    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService)
+    const criarPagamentoUseCase = new CriarPagamentoUseCase(pagamentoRepository, mercadoPagoService, mockQueue)
 
     const mockPagamentoDto: PagamentoDto = {
       valor: '12',
